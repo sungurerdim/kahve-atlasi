@@ -226,7 +226,7 @@
   .modal-close:focus-visible{box-shadow:0 0 0 2px var(--accent);}
   .modal-body{display:grid; grid-template-columns:220px 1fr; gap:1.4rem; padding:1.7rem 1.7rem 1.6rem;}
   @media (max-width:600px){ .modal-body{grid-template-columns:1fr;} }
-  .modal-visual{display:flex; flex-direction:column; gap:.6rem; align-items:center;}
+  .modal-visual{display:flex; flex-direction:column; gap:.6rem; align-items:stretch;}
   .modal-visual .vessel-svg{max-width:230px;}
   .modal-info h3{font-size:2.05rem; margin-top:.15rem;}
   .modal-badges{display:flex; gap:.4rem; align-items:center; flex-wrap:wrap;}
@@ -1105,12 +1105,8 @@
     return html;
   }
 
-  function infoGridHTML(d){
+  function detailSpecsHTML(d){
     var html = '<div class="specs">';
-    html += '<div class="specs-label">'+t(UI.malzemeler)+'</div>';
-    ingredientRows(d).forEach(function(r){
-      html += '<span class="k">'+r[0]+'</span><span class="v">'+r[1]+'</span>';
-    });
     html += '<div class="specs-label">'+t(UI.detaylar)+'</div>';
     prepRows(d).forEach(function(r){
       html += '<span class="k">'+r[0]+'</span><span class="v">'+r[1]+'</span>';
@@ -1197,6 +1193,7 @@
     var html = "";
     html += '<div class="modal-visual">';
     html += '<div class="vessel-stage">'+vesselSVG(d.vessel, d.layers)+'</div>';
+    html += ingredientsSpecsHTML(d);
     html += '</div>';
 
     html += '<div class="modal-info">';
@@ -1204,7 +1201,7 @@
     html += '<h3 id="modal-name-heading" class="card-name">'+t(d.name)+'</h3>';
     html += '<p class="card-note">'+t(d.note)+'</p>';
     if(badges){ html += '<div class="modal-badges">'+badges+'</div>'; }
-    html += infoGridHTML(d);
+    html += detailSpecsHTML(d);
     html += '<div class="modal-section"><h4>'+t(UI.nasilYapilir)+'</h4>'+stepsHTML+'</div>';
     html += '<div class="modal-section"><h4>'+t(UI.ipuclari)+'</h4><ul>'+tipsHTML+'</ul></div>';
     if(origin){ html += '<div class="modal-section"><h4>'+t(UI.mensei)+'</h4><p>'+origin+'</p></div>'; }
