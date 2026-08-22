@@ -232,6 +232,20 @@ for (const vessel of new Set(drinks.map((d) => d.vessel))) {
   if (!vesselNames[vessel]) fail("I10", `vessel "${vessel}" has no VESSEL_NAMES entry, so its "served in" row renders blank`);
 }
 
+/* ---------- I11 the gravimetric brew ratio is well formed and explained ---------- */
+/* Espresso drinks carry two figures: `ratio` is the traditional volume in the cup, `brewRatio` is
+   the specialty dose-to-yield ratio by weight. Carrying one without its label reintroduces exactly
+   the ambiguity the pair exists to remove. */
+for (const d of drinks) {
+  if (d.brewRatio === undefined) continue;
+  if (!/^\d+(\.\d+)?:\d+(\.\d+)?$/.test(String(d.brewRatio))) {
+    fail("I11", `drink "${d.id}" has a malformed brewRatio "${d.brewRatio}"`);
+  }
+  if (!bothLangs(d.brewRatioLabel)) {
+    fail("I11", `drink "${d.id}" states a brewRatio but has no complete {tr, en} brewRatioLabel, so the number renders unexplained`);
+  }
+}
+
 /* ---------- report ---------- */
 console.log(`checked ${drinks.length} drinks across ${CATEGORIES.length} categories · steps rendered in 2 languages · ${ratioChecked} ratios verified arithmetically`);
 if (failures.length) {

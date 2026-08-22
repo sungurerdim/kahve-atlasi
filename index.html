@@ -409,6 +409,7 @@
     detaylar:{tr:"Detaylar", en:"Details"},
     toplam:{tr:"Toplam", en:"Total"},
     oran:{tr:"Oran", en:"Ratio"},
+    demlemeOrani:{tr:"Demleme Oranı", en:"Brew Ratio"},
     kahve:{tr:"Kahve", en:"Coffee"},
     pisirmeAraci:{tr:"Pişirme Aracı", en:"Brewing Tool"},
     kavrulma:{tr:"Kavrulma", en:"Roast"},
@@ -732,10 +733,10 @@
         {tr:"Dozu hassas bir teraziyle tartın — 1 gramlık fark bile sonucu ekşi ya da acı yöne çekebilir.", en:"Weigh the dose on a precise scale — even a 1-gram difference can push the shot sour or bitter."}
       ],
       drinks:[
-        {id:"ristretto", name:{tr:"Ristretto",en:"Ristretto"}, note:{tr:"Kısa ve yoğun çekim",en:"Short, intense shot"}, dose:"18g", vessel:"demitasse", layers:[["espresso",20]], ratio:"1:1", ratioLabel:{tr:"kahve dozu : espresso çıkışı",en:"coffee dose : espresso yield"}, roast:4, grind:{tr:"Espresso, çok ince",en:"Espresso, very fine"}, temp:"92–94°C", time:{tr:"15–20 sn",en:"15–20 sec"}, tool:{tr:"Espresso Makinesi",en:"Espresso Machine"}},
-        {id:"espresso-solo", name:{tr:"Espresso (Solo)",en:"Espresso (Solo)"}, note:{tr:"Tek shot, klasik",en:"Single shot, classic"}, dose:"9g", vessel:"demitasse", layers:[["espresso",30]], ratio:"1:3", ratioLabel:{tr:"kahve dozu : espresso çıkışı",en:"coffee dose : espresso yield"}, roast:4, grind:{tr:"Espresso, ince",en:"Espresso, fine"}, temp:"92–94°C", time:{tr:"25–30 sn",en:"25–30 sec"}, tool:{tr:"Espresso Makinesi",en:"Espresso Machine"}},
-        {id:"doppio", name:{tr:"Doppio",en:"Doppio"}, note:{tr:"Çift shot espresso",en:"Double shot espresso"}, dose:"18g", vessel:"demitasse", layers:[["espresso",60]], ratio:"1:3", ratioLabel:{tr:"kahve dozu : espresso çıkışı",en:"coffee dose : espresso yield"}, roast:4, grind:{tr:"Espresso, ince",en:"Espresso, fine"}, temp:"92–94°C", time:{tr:"25–30 sn",en:"25–30 sec"}, tool:{tr:"Espresso Makinesi",en:"Espresso Machine"}},
-        {id:"lungo", name:{tr:"Lungo",en:"Lungo"}, note:{tr:"Uzun çekim, daha hafif",en:"Long pull, lighter"}, dose:"18g", vessel:"demitasse", layers:[["espresso",90]], ratio:"1:5", ratioLabel:{tr:"kahve dozu : espresso çıkışı",en:"coffee dose : espresso yield"}, roast:4, grind:{tr:"Espresso, ince",en:"Espresso, fine"}, temp:"92–94°C", time:{tr:"35–40 sn",en:"35–40 sec"}, tool:{tr:"Espresso Makinesi",en:"Espresso Machine"}},
+        {id:"ristretto", name:{tr:"Ristretto",en:"Ristretto"}, note:{tr:"Kısa ve yoğun çekim",en:"Short, intense shot"}, dose:"18g", vessel:"demitasse", layers:[["espresso",20]], ratio:"1:1", ratioLabel:{tr:"kahve dozu : fincan hacmi, geleneksel ölçü",en:"coffee dose : cup volume, traditional measure"}, brewRatio:"1:1", brewRatioLabel:{tr:"ağırlıkça doz : çıkış, uzman standardı",en:"dose : yield by weight, specialty standard"}, roast:4, grind:{tr:"Espresso, çok ince",en:"Espresso, very fine"}, temp:"92–94°C", time:{tr:"15–20 sn",en:"15–20 sec"}, tool:{tr:"Espresso Makinesi",en:"Espresso Machine"}},
+        {id:"espresso-solo", name:{tr:"Espresso (Solo)",en:"Espresso (Solo)"}, note:{tr:"Tek shot, klasik",en:"Single shot, classic"}, dose:"9g", vessel:"demitasse", layers:[["espresso",30]], ratio:"1:3", ratioLabel:{tr:"kahve dozu : fincan hacmi, geleneksel ölçü",en:"coffee dose : cup volume, traditional measure"}, brewRatio:"1:2", brewRatioLabel:{tr:"ağırlıkça doz : çıkış, uzman standardı",en:"dose : yield by weight, specialty standard"}, roast:4, grind:{tr:"Espresso, ince",en:"Espresso, fine"}, temp:"92–94°C", time:{tr:"25–30 sn",en:"25–30 sec"}, tool:{tr:"Espresso Makinesi",en:"Espresso Machine"}},
+        {id:"doppio", name:{tr:"Doppio",en:"Doppio"}, note:{tr:"Çift shot espresso",en:"Double shot espresso"}, dose:"18g", vessel:"demitasse", layers:[["espresso",60]], ratio:"1:3", ratioLabel:{tr:"kahve dozu : fincan hacmi, geleneksel ölçü",en:"coffee dose : cup volume, traditional measure"}, brewRatio:"1:2", brewRatioLabel:{tr:"ağırlıkça doz : çıkış, uzman standardı",en:"dose : yield by weight, specialty standard"}, roast:4, grind:{tr:"Espresso, ince",en:"Espresso, fine"}, temp:"92–94°C", time:{tr:"25–30 sn",en:"25–30 sec"}, tool:{tr:"Espresso Makinesi",en:"Espresso Machine"}},
+        {id:"lungo", name:{tr:"Lungo",en:"Lungo"}, note:{tr:"Uzun çekim, daha hafif",en:"Long pull, lighter"}, dose:"18g", vessel:"demitasse", layers:[["espresso",90]], ratio:"1:5", ratioLabel:{tr:"kahve dozu : fincan hacmi, geleneksel ölçü",en:"coffee dose : cup volume, traditional measure"}, brewRatio:"1:3", brewRatioLabel:{tr:"ağırlıkça doz : çıkış, uzman standardı",en:"dose : yield by weight, specialty standard"}, roast:4, grind:{tr:"Espresso, ince",en:"Espresso, fine"}, temp:"92–94°C", time:{tr:"35–40 sn",en:"35–40 sec"}, tool:{tr:"Espresso Makinesi",en:"Espresso Machine"}},
         {id:"americano", name:{tr:"Americano",en:"Americano"}, note:{tr:"Espresso + sıcak su",en:"Espresso + hot water"}, dose:"18g", vessel:"mug", layers:[["espresso",60],["water",120]], ratio:"1:2", ratioLabel:{tr:"espresso : su",en:"espresso : water"}, roast:4, grind:{tr:"Espresso, ince",en:"Espresso, fine"}, temp:"92–94°C", time:{tr:"25–30 sn",en:"25–30 sec"}, tool:{tr:"Espresso Makinesi",en:"Espresso Machine"}},
         {id:"cortado", name:{tr:"Cortado",en:"Cortado"}, note:{tr:"Eşit espresso ve süt",en:"Equal parts espresso and milk"}, dose:"18g", vessel:"smallGlass", layers:[["espresso",30],["milk",30]], ratio:"1:1", ratioLabel:{tr:"espresso : süt",en:"espresso : milk"}, roast:4, grind:{tr:"Espresso, ince",en:"Espresso, fine"}, temp:"92–94°C", time:{tr:"25–30 sn",en:"25–30 sec"}, tool:{tr:"Espresso Mak. + Süt Buharlayıcı",en:"Espresso Machine + Milk Steamer"}},
         {id:"macchiato", name:{tr:"Macchiato",en:"Macchiato"}, note:{tr:"Espresso, azıcık köpük",en:"Espresso with a touch of foam"}, dose:"9g", vessel:"demitasse", layers:[["espresso",30],["foam",10]], ratio:"3:1", ratioLabel:{tr:"espresso : köpük",en:"espresso : foam"}, roast:4, grind:{tr:"Espresso, ince",en:"Espresso, fine"}, temp:"92–94°C", time:{tr:"25–30 sn",en:"25–30 sec"}, tool:{tr:"Espresso Mak. + Süt Buharlayıcı",en:"Espresso Machine + Milk Steamer"}},
@@ -1290,6 +1291,9 @@
     }
     if(d.ratio && d.ratio !== "—"){
       rows.push([t(UI.oran), '<span class="accent">'+d.ratio+'</span> <span class="faint">('+t(d.ratioLabel)+')</span>']);
+    }
+    if(d.brewRatio){
+      rows.push([t(UI.demlemeOrani), '<span class="accent">'+d.brewRatio+'</span> <span class="faint">('+t(d.brewRatioLabel)+')</span>']);
     }
     return rows;
   }
