@@ -54,11 +54,11 @@
     --text-faint:#93765a;
     --vessel-line:#4a2f1c;
 
-    --accent:#b06a1f;      /* espresso bazlı — karamel */
-    --accent-cold:#2f7a70; /* soğuk kahveler — koyu turkuaz */
+    --accent:#b06a1f;      /* espresso-based — caramel */
+    --accent-cold:#2f7a70; /* cold coffees — deep turquoise */
     --accent-filter:#71802c; /* filtre & manuel — zeytin */
-    --accent-trad:#a13d1c;  /* geleneksel — bakır */
-    --accent-world:#3f5f8a; /* dünyadan kahveler — indigo */
+    --accent-trad:#a13d1c;  /* traditional — copper */
+    --accent-world:#3f5f8a; /* coffees of the world — indigo */
 
     --l-espresso:#4a2a1a;
     --l-coffee:#6b3a22;
@@ -341,10 +341,10 @@
     <div class="brand"><span class="mark"></span><span data-i18n="title">Coffee Atlas</span></div>
     <nav class="navlinks" id="navlinks">
       <a href="#espresso" data-i18n="navEspresso">Espresso-Based</a>
-      <a href="#soguk" data-i18n="navCold">Cold Coffees</a>
-      <a href="#filtre" data-i18n="navFilter">Filter &amp; Manual</a>
+      <a href="#cold" data-i18n="navCold">Cold Coffees</a>
+      <a href="#filter" data-i18n="navFilter">Filter &amp; Manual</a>
       <a href="#cezve" data-i18n="navCezve">Cezve-Brewed</a>
-      <a href="#yoresel" data-i18n="navYoresel">Regional Coffee Cultures</a>
+      <a href="#regional" data-i18n="navYoresel">Regional Coffee Cultures</a>
     </nav>
     <div class="lang-switch" role="group" aria-label="Dil / Language" id="lang-switch">
       <button type="button" data-lang="en">EN</button>
@@ -392,7 +392,7 @@
 
   var UI = {
     title:{tr:"Kahve Atlası", en:"Coffee Atlas"},
-    eyebrow:{tr:"Barista Referans Rehberi", en:"Barista Reference Guide"},
+    eyebrow:{tr:"Baristalar ve kahve severler için", en:"For baristas and coffee lovers"},
     h1:{tr:"Fincandaki her oranın haritası", en:"A map of every ratio in the cup"},
     lede:{tr:"Espresso'dan Türk kahvesine, kafelerde sipariş verdiğin her kahvenin doğru kahve–süt–su oranı, gramajı, ideal kavrulma derecesi ve kendi bardağıyla — tek bakışta. Detaylı hazırlama adımları için bir karta tıkla.",
       en:"From espresso to Turkish coffee — every drink you order at a café, with its exact coffee–milk–water ratio, dose, ideal roast, and proper cup, at a glance. Tap a card for the full step-by-step guide."},
@@ -749,7 +749,7 @@
       ]
     },
     {
-      id:"soguk", accent:"--accent-cold", num:"02",
+      id:"cold", accent:"--accent-cold", num:"02",
       title:{tr:"Soğuk Kahveler", en:"Cold Coffees"},
       sub:{tr:"Buzla ya da uzun süre soğukta demlenerek servis edilen versiyonlar.", en:"Versions served over ice or brewed cold over a long steep."},
       tips:[
@@ -763,7 +763,7 @@
       ]
     },
     {
-      id:"filtre", accent:"--accent-filter", num:"03",
+      id:"filter", accent:"--accent-filter", num:"03",
       title:{tr:"Filtre & Manuel Demleme", en:"Filter & Manual Brewing"},
       sub:{tr:"Kahve ile suyun doğrudan temas ettiği, makinesiz ya da damlatmalı yöntemler.", en:"Methods where coffee and water meet directly — manual or drip, without an espresso machine."},
       tips:[{tr:"Su kalitesi belirleyicidir: filtrelenmiş, TDS 75–250 ppm arası su kullanın.", en:"Water quality is decisive: use filtered water with TDS between 75–250 ppm."}],
@@ -790,7 +790,7 @@
       ]
     },
     {
-      id:"yoresel", accent:"--accent-world", num:"05",
+      id:"regional", accent:"--accent-world", num:"05",
       title:{tr:"Yöresel Kahve Kültürleri", en:"Regional Coffee Cultures"},
       sub:{tr:"Kendi ülkesine özgü ekipman, ritüel ya da tekniğiyle öne çıkan yöresel kahve gelenekleri.", en:"Regional coffee traditions defined by their own country-specific equipment, ritual, or technique."},
       tips:[
@@ -1062,7 +1062,7 @@
     if(d.id === "greek-frappe") return stepsFrappe(d);
     if(d.id === "cortadito") return stepsCortadito(d);
     if(d.id === "cafe-au-lait") return stepsCafeAuLait(d);
-    if(cat.id === "filtre"){
+    if(cat.id === "filter"){
       if(d.vessel === "v60" || d.vessel === "chemex") return stepsPourover(d);
       if(d.vessel === "frenchpress") return stepsImmersion(d);
       if(d.vessel === "aeropress") return stepsAeropress(d);

@@ -153,7 +153,7 @@ const ESPRESSO_FALLBACK_ALLOWED = new Set([
 const EXPLICIT_IDS = new Set(["long-black", "turkish-coffee", "bosnian", "vietnamese", "greek-frappe", "cortadito", "cafe-au-lait", "cold-brew"]);
 const FILTER_VESSELS = new Set(["v60", "chemex", "frenchpress", "aeropress", "mokapot", "drip"]);
 for (const [cat, d] of pairs) {
-  const routed = EXPLICIT_IDS.has(d.id) || (cat.id === "filtre" && FILTER_VESSELS.has(d.vessel));
+  const routed = EXPLICIT_IDS.has(d.id) || (cat.id === "filter" && FILTER_VESSELS.has(d.vessel));
   if (!routed && !ESPRESSO_FALLBACK_ALLOWED.has(d.id)) {
     fail("I6", `drink "${d.id}" reaches the stepsEspresso catch-all without being declared an espresso drink. Either give it its own generator or add it to ESPRESSO_FALLBACK_ALLOWED in this gate.`);
   }
@@ -185,6 +185,21 @@ for (const d of drinks) {
 }
 if (ratioChecked === 0) {
   fail("I7", "the ratio check matched zero drinks — its selectors are stale. A check that scans nothing is a failure, not a pass.");
+}
+
+/* ---------- I8 in-page navigation resolves ---------- */
+/* Sections get their id from cat.id (index.html:1298), so a renamed category silently orphans the
+   nav link that pointed at it. Both directions are checked: no dangling link, no unreachable section. */
+const navHrefs = [...html.matchAll(/href="#([a-z0-9-]+)"/g)].map((m) => m[1]);
+const catIds = new Set(CATEGORIES.map((c) => c.id));
+if (navHrefs.length === 0) {
+  fail("I8", "found no in-page nav links to check — the selector is stale. Scanning nothing is a failure, not a pass.");
+}
+for (const href of new Set(navHrefs)) {
+  if (!catIds.has(href)) fail("I8", `nav links to "#${href}" but no category has that id, so the link goes nowhere`);
+}
+for (const id of catIds) {
+  if (!navHrefs.includes(id)) fail("I8", `category "${id}" renders a section but nothing in the nav links to it`);
 }
 
 /* ---------- report ---------- */
