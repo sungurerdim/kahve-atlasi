@@ -88,6 +88,15 @@
   }
   .navlinks a:hover, .navlinks a:focus-visible{ color:var(--text); border-color:var(--line-strong); background:var(--surface); outline:none;}
   .navlinks a:focus-visible{ box-shadow:0 0 0 2px var(--accent); }
+  .lang-switch{display:flex; border:1px solid var(--line); border-radius:999px; padding:2px; flex:none; background:var(--surface);}
+  .lang-switch button{
+    font-family:var(--font-mono); font-size:.7rem; letter-spacing:.05em; font-weight:600;
+    padding:.32rem .6rem; border-radius:999px; border:none; background:none; color:var(--text-faint);
+    cursor:pointer; transition:background .15s, color .15s;
+  }
+  .lang-switch button.active{background:var(--accent); color:#fffaf2;}
+  .lang-switch button:not(.active):hover{color:var(--text);}
+  .lang-switch button:focus-visible{outline:2px solid var(--accent); outline-offset:1px;}
 
   /* ---------- hero ---------- */
   .hero{padding:clamp(2.2rem,5vw,4rem) 0 clamp(1.6rem,3vw,2.2rem); position:relative; overflow:hidden;}
@@ -98,7 +107,7 @@
   @keyframes drift2{0%,100%{transform:translateY(10px) translateX(0); opacity:.3;} 50%{transform:translateY(-18px) translateX(10px); opacity:.5;}}
 
   .eyebrow{font-family:var(--font-mono); font-size:.8rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent);}
-  .hero h1{font-size:clamp(2.5rem,6vw,4.4rem); font-weight:600; font-style:italic; margin-top:.5rem; max-width:14ch;}
+  .hero h1{font-size:clamp(2.5rem,6vw,4.4rem); font-weight:600; font-style:italic; margin-top:.5rem; max-width:16ch;}
   .hero p.lede{font-size:clamp(1rem,1.6vw,1.15rem); color:var(--text-dim); max-width:56ch; margin-top:1rem;}
 
   .legend-row{
@@ -250,6 +259,7 @@
     body{background:#fff; font-size:12px;}
     .topnav{position:static; background:#fff; -webkit-backdrop-filter:none; backdrop-filter:none; border-bottom:1px solid #ccc;}
     .navlinks{display:none;}
+    .lang-switch{display:none;}
     .steam{display:none;}
     .legend-row{box-shadow:none; border:1px solid #ccc;}
     .hero{padding-top:.5rem; padding-bottom:.5rem;}
@@ -276,14 +286,18 @@
 
 <div class="topnav">
   <div class="wrap">
-    <div class="brand"><span class="mark"></span>Kahve Atlası</div>
-    <nav class="navlinks">
-      <a href="#espresso">Espresso Bazlı</a>
-      <a href="#soguk">Soğuk Kahveler</a>
-      <a href="#filtre">Filtre &amp; Manuel</a>
-      <a href="#geleneksel">Geleneksel</a>
-      <a href="#dunya">Dünyadan Kahveler</a>
+    <div class="brand"><span class="mark"></span><span data-i18n="title">Kahve Atlası</span></div>
+    <nav class="navlinks" id="navlinks">
+      <a href="#espresso" data-i18n="navEspresso">Espresso Bazlı</a>
+      <a href="#soguk" data-i18n="navCold">Soğuk Kahveler</a>
+      <a href="#filtre" data-i18n="navFilter">Filtre &amp; Manuel</a>
+      <a href="#geleneksel" data-i18n="navTrad">Geleneksel</a>
+      <a href="#dunya" data-i18n="navWorld">Dünyadan Kahveler</a>
     </nav>
+    <div class="lang-switch" role="group" aria-label="Dil / Language" id="lang-switch">
+      <button type="button" data-lang="tr">TR</button>
+      <button type="button" data-lang="en">EN</button>
+    </div>
   </div>
 </div>
 
@@ -291,9 +305,9 @@
   <div class="steam s1"></div>
   <div class="steam s2"></div>
   <div class="wrap">
-    <p class="eyebrow">Barista Referans Rehberi</p>
-    <h1>Fincandaki her oranın haritası</h1>
-    <p class="lede">Espresso'dan Türk kahvesine, kafelerde sipariş verdiğin her kahvenin doğru kahve–süt–su oranı, gramajı, ideal kavrulma derecesi ve kendi bardağıyla — tek bakışta. Detaylı hazırlama adımları için bir karta tıkla.</p>
+    <p class="eyebrow" data-i18n="eyebrow">Barista Referans Rehberi</p>
+    <h1 data-i18n="h1">Fincandaki her oranın haritası</h1>
+    <p class="lede" data-i18n="lede">Espresso'dan Türk kahvesine, kafelerde sipariş verdiğin her kahvenin doğru kahve–süt–su oranı, gramajı, ideal kavrulma derecesi ve kendi bardağıyla — tek bakışta. Detaylı hazırlama adımları için bir karta tıkla.</p>
     <div class="legend-row" id="legend"></div>
   </div>
 </header>
@@ -302,13 +316,13 @@
 
 <footer>
   <div class="wrap">
-    <p>Oranlar ve kavrulma önerileri yaygın barista standartlarına dayanır; çekirdek ve damak zevkine göre ince ayar yapılabilir.</p>
-    <span class="mono">g = kuru kahve · ml = sıvı hacim</span>
+    <p data-i18n="footerP">Oranlar ve kavrulma önerileri yaygın barista standartlarına dayanır; çekirdek ve damak zevkine göre ince ayar yapılabilir.</p>
+    <span class="mono" data-i18n="footerMono">g = kuru kahve · ml = sıvı hacim</span>
   </div>
 </footer>
 
 <dialog class="detail-modal" id="detail-modal" aria-labelledby="modal-name-heading">
-  <button class="modal-close" data-close aria-label="Kapat">×</button>
+  <button class="modal-close" data-close id="modal-close-btn" aria-label="Kapat">×</button>
   <div class="modal-body" id="modal-body"></div>
 </dialog>
 
@@ -316,41 +330,92 @@
 (function(){
   "use strict";
 
+  var LANG = "tr";
+  function t(v){
+    if(v && typeof v === "object" && !Array.isArray(v)){
+      if(v.tr !== undefined || v.en !== undefined) return v[LANG] || v.tr || v.en || "";
+    }
+    return v;
+  }
+
+  var UI = {
+    title:{tr:"Kahve Atlası", en:"Coffee Atlas"},
+    eyebrow:{tr:"Barista Referans Rehberi", en:"Barista Reference Guide"},
+    h1:{tr:"Fincandaki her oranın haritası", en:"A map of every ratio in the cup"},
+    lede:{tr:"Espresso'dan Türk kahvesine, kafelerde sipariş verdiğin her kahvenin doğru kahve–süt–su oranı, gramajı, ideal kavrulma derecesi ve kendi bardağıyla — tek bakışta. Detaylı hazırlama adımları için bir karta tıkla.",
+      en:"From espresso to Turkish coffee — every drink you order at a café, with its exact coffee–milk–water ratio, dose, ideal roast, and proper cup, at a glance. Tap a card for the full step-by-step guide."},
+    navEspresso:{tr:"Espresso Bazlı", en:"Espresso-Based"},
+    navCold:{tr:"Soğuk Kahveler", en:"Cold Coffees"},
+    navFilter:{tr:"Filtre & Manuel", en:"Filter & Manual"},
+    navTrad:{tr:"Geleneksel", en:"Traditional"},
+    navWorld:{tr:"Dünyadan Kahveler", en:"Coffees of the World"},
+    roastScaleTitle:{tr:"Kavrulma Ölçeği — çekirdeğin ne kadar koyu kavrulduğu", en:"Roast Scale — how dark the beans are roasted"},
+    legendNote:{tr:"Her kart kendi türüne uygun bardak/ekipman çiziminde katman katman sunulur. Oranların ne anlama geldiği (ör. kahve:su ya da espresso:süt) her kartta ve detay sayfasında açıkça yazılıdır. Detaylı hazırlama adımları, çekirdek önerisi ve ipuçları için bir karta tıkla.",
+      en:"Each card shows its composition layer by layer, in its own appropriate cup or brewing equipment. What each ratio means (e.g. coffee:water or espresso:milk) is spelled out on every card and in the detail view. Tap a card for full brewing steps, bean recommendations, and tips."},
+    malzemeler:{tr:"Malzemeler", en:"Ingredients"},
+    detaylar:{tr:"Detaylar", en:"Details"},
+    toplam:{tr:"Toplam", en:"Total"},
+    oran:{tr:"Oran", en:"Ratio"},
+    kahve:{tr:"Kahve", en:"Coffee"},
+    pisirmeAraci:{tr:"Pişirme Aracı", en:"Brewing Tool"},
+    kavrulma:{tr:"Kavrulma", en:"Roast"},
+    ogutum:{tr:"Öğütüm", en:"Grind"},
+    sicaklik:{tr:"Sıcaklık", en:"Temperature"},
+    sure:{tr:"Süre", en:"Time"},
+    kap:{tr:"Kap", en:"Cup"},
+    hazirlik:{tr:"Hazırlık", en:"Prep"},
+    demleme:{tr:"Demleme", en:"Brew"},
+    sunum:{tr:"Sunum", en:"Serve"},
+    adimlarTikla:{tr:"Adımlar için tıkla ↗", en:"Tap for steps ↗"},
+    nasilYapilir:{tr:"Nasıl Yapılır", en:"How It's Made"},
+    ipuclari:{tr:"İpuçları & Gereklilikler", en:"Tips & Requirements"},
+    mensei:{tr:"Çekirdek Menşei Önerisi", en:"Recommended Bean Origin"},
+    buzlu:{tr:"Buzlu", en:"Iced"},
+    footerP:{tr:"Oranlar ve kavrulma önerileri yaygın barista standartlarına dayanır; çekirdek ve damak zevkine göre ince ayar yapılabilir.",
+      en:"Ratios and roast recommendations follow common barista standards; fine-tune to your beans and taste."},
+    footerMono:{tr:"g = kuru kahve · ml = sıvı hacim", en:"g = dry coffee · ml = liquid volume"},
+    close:{tr:"Kapat", en:"Close"},
+    detailsFor:{tr:" — detayları gör", en:" — view details"}
+  };
+
   var LAYER_LABELS = {
-    espresso:"Espresso", water:"Su", milk:"Süt", foam:"Köpük",
-    choc:"Çikolata Sosu", cream:"Krema", icecream:"Dondurma", coldbrew:"Cold Brew Konsantresi",
-    coffee:"Demlenmiş Kahve", condensedmilk:"Koyulaştırılmış Süt"
+    espresso:{tr:"Espresso",en:"Espresso"}, water:{tr:"Su",en:"Water"}, milk:{tr:"Süt",en:"Milk"}, foam:{tr:"Köpük",en:"Foam"},
+    choc:{tr:"Çikolata Sosu",en:"Chocolate Sauce"}, cream:{tr:"Krema",en:"Whipped Cream"}, icecream:{tr:"Dondurma",en:"Ice Cream"},
+    coldbrew:{tr:"Cold Brew Konsantresi",en:"Cold Brew Concentrate"}, coffee:{tr:"Demlenmiş Kahve",en:"Brewed Coffee"},
+    condensedmilk:{tr:"Koyulaştırılmış Süt",en:"Condensed Milk"}
   };
   var ROAST_COLORS = {1:"var(--r1)",2:"var(--r2)",3:"var(--r3)",4:"var(--r4)",5:"var(--r5)"};
-  var ROAST_LABELS = {1:"Açık", 2:"Açık-Orta", 3:"Orta", 4:"Orta-Koyu", 5:"Koyu"};
+  var ROAST_LABELS = {1:{tr:"Açık",en:"Light"}, 2:{tr:"Açık-Orta",en:"Light-Medium"}, 3:{tr:"Orta",en:"Medium"}, 4:{tr:"Orta-Koyu",en:"Medium-Dark"}, 5:{tr:"Koyu",en:"Dark"}};
   var ROAST_CUES = {
-    1:"ekşimsi, meyveli",
-    2:"meyveli, hafif gövde",
-    3:"dengeli, karamelli",
-    4:"yoğun gövde, az ekşi",
-    5:"dumanlı, en yoğun"
+    1:{tr:"ekşimsi, meyveli", en:"tangy, fruity"},
+    2:{tr:"meyveli, hafif gövde", en:"fruity, light body"},
+    3:{tr:"dengeli, karamelli", en:"balanced, caramel"},
+    4:{tr:"yoğun gövde, az ekşi", en:"full body, low acidity"},
+    5:{tr:"dumanlı, en yoğun", en:"smoky, most intense"}
   };
-  var GENERAL_TIP = "Çekirdeği kavrulma tarihinden itibaren 2–4 hafta içinde tüketin; oda sıcaklığında, hava almayan bir kapta saklayın.";
-  var MILK_TIP = "Süt asla kaynatılmamalı — fazla ısınan süt tatlılığını kaybedip yanık bir tat bırakır.";
+  var GENERAL_TIP = {tr:"Çekirdeği kavrulma tarihinden itibaren 2–4 hafta içinde tüketin; oda sıcaklığında, hava almayan bir kapta saklayın.",
+    en:"Use beans within 2–4 weeks of the roast date; store at room temperature in an airtight container."};
+  var MILK_TIP = {tr:"Süt asla kaynatılmamalı — fazla ısınan süt tatlılığını kaybedip yanık bir tat bırakır.",
+    en:"Never boil the milk — overheated milk loses its sweetness and turns scorched-tasting."};
 
   var ASSEMBLE = {
-    "Ristretto":"Fincana alıp hemen için.",
-    "Espresso (Solo)":"Fincana alıp hemen için.",
-    "Doppio":"Fincana alıp hemen için.",
-    "Lungo":"Fincana alıp hemen için.",
-    "Americano":"Karıştırmadan servis edin.",
-    "Cortado":"Espressonun üzerine sütü nazikçe dökün, servis edin.",
-    "Macchiato":"Espressonun üzerine bir kaşık köpük ekleyin.",
-    "Piccolo Latte":"Espressonun üzerine sütü ve köpüğü dökün.",
-    "Flat White":"Sütü, ince ve pürüzsüz bir köpük bırakacak şekilde nazikçe dökün.",
-    "Cappuccino":"Espresso, süt ve köpüğü eşit üç katman halinde dökün.",
-    "Latte":"Sütü yavaşça dökün, üzerinde ince bir köpük tabakası bırakın.",
-    "Mocha":"Bardağın dibine çikolata sosunu koyun, üzerine espresso ve sütü ekleyin.",
-    "Affogato":"Dondurmayı kaseye koyun, sıcak espressoyu son anda üzerine dökün.",
-    "Espresso Con Panna":"Üzerine çırpılmış krema ekleyip servis edin.",
-    "Viyana Kahvesi (Einspänner)":"Üzerine bol çırpılmış krema ekleyip karıştırmadan servis edin.",
-    "Iced Americano":"Karıştırmadan servis edin.",
-    "Iced Latte":"Buz dolu bardağa önce espressoyu, sonra soğuk sütü dökün."
+    "ristretto":{tr:"Fincana alıp hemen için.", en:"Pour into the cup and drink right away."},
+    "espresso-solo":{tr:"Fincana alıp hemen için.", en:"Pour into the cup and drink right away."},
+    "doppio":{tr:"Fincana alıp hemen için.", en:"Pour into the cup and drink right away."},
+    "lungo":{tr:"Fincana alıp hemen için.", en:"Pour into the cup and drink right away."},
+    "americano":{tr:"Karıştırmadan servis edin.", en:"Serve without stirring."},
+    "cortado":{tr:"Espressonun üzerine sütü nazikçe dökün, servis edin.", en:"Gently pour the milk over the espresso and serve."},
+    "macchiato":{tr:"Espressonun üzerine bir kaşık köpük ekleyin.", en:"Add a spoonful of foam on top of the espresso."},
+    "piccolo-latte":{tr:"Espressonun üzerine sütü ve köpüğü dökün.", en:"Pour the milk and foam over the espresso."},
+    "flat-white":{tr:"Sütü, ince ve pürüzsüz bir köpük bırakacak şekilde nazikçe dökün.", en:"Pour the milk gently, leaving a thin, silky layer of foam."},
+    "cappuccino":{tr:"Espresso, süt ve köpüğü eşit üç katman halinde dökün.", en:"Pour espresso, milk, and foam in three equal layers."},
+    "latte":{tr:"Sütü yavaşça dökün, üzerinde ince bir köpük tabakası bırakın.", en:"Pour the milk slowly, leaving a thin layer of foam on top."},
+    "mocha":{tr:"Bardağın dibine çikolata sosunu koyun, üzerine espresso ve sütü ekleyin.", en:"Put the chocolate sauce at the bottom of the glass, then add the espresso and milk."},
+    "affogato":{tr:"Dondurmayı kaseye koyun, sıcak espressoyu son anda üzerine dökün.", en:"Place the ice cream in the dish, then pour the hot espresso over it at the very last moment."},
+    "espresso-con-panna":{tr:"Üzerine çırpılmış krema ekleyip servis edin.", en:"Top with whipped cream and serve."},
+    "iced-americano":{tr:"Karıştırmadan servis edin.", en:"Serve without stirring."},
+    "iced-latte":{tr:"Buz dolu bardağa önce espressoyu, sonra soğuk sütü dökün.", en:"Pour the espresso first into the ice-filled glass, then the cold milk."},
+    "vienna":{tr:"Üzerine bol çırpılmış krema ekleyip karıştırmadan servis edin.", en:"Top generously with whipped cream and serve without stirring."}
   };
 
   var MATERIAL_KIND = {
@@ -366,7 +431,7 @@
     copper:["#f2ddb2","#dcae75","#b17f4c"]
   };
 
-  /* ---------- vessel geometry ---------- */
+  /* ---------- vessel geometry (language-neutral) ---------- */
   function trapPath(b){
     if(b.waistY !== undefined){
       return "M "+b.topL+","+b.topY+
@@ -403,16 +468,16 @@
     return "M "+x+","+mTop+" C "+(x+26)+","+(mTop-4)+" "+(x+26)+","+(mBot+8)+" "+x+","+mBot;
   }
   function widthAt(b, y){
-    var left, right, t;
+    var left, right, tt;
     if(b.waistY !== undefined && y <= b.waistY){
-      t = (y-b.topY)/(b.waistY-b.topY);
-      left = b.topL+(b.waistL-b.topL)*t; right = b.topR+(b.waistR-b.topR)*t;
+      tt = (y-b.topY)/(b.waistY-b.topY);
+      left = b.topL+(b.waistL-b.topL)*tt; right = b.topR+(b.waistR-b.topR)*tt;
     } else if(b.waistY !== undefined){
-      t = (y-b.waistY)/(b.botY-b.waistY);
-      left = b.waistL+(b.botL-b.waistL)*t; right = b.waistR+(b.botR-b.waistR)*t;
+      tt = (y-b.waistY)/(b.botY-b.waistY);
+      left = b.waistL+(b.botL-b.waistL)*tt; right = b.waistR+(b.botR-b.waistR)*tt;
     } else {
-      t = Math.max(0, Math.min(1, (y-b.topY)/(b.botY-b.topY)));
-      left = b.topL+(b.botL-b.topL)*t; right = b.topR+(b.botR-b.topR)*t;
+      tt = Math.max(0, Math.min(1, (y-b.topY)/(b.botY-b.topY)));
+      left = b.topL+(b.botL-b.topL)*tt; right = b.topR+(b.botR-b.topR)*tt;
     }
     return {cx:(left+right)/2, rx:(right-left)/2};
   }
@@ -482,28 +547,6 @@
   }
 
   var CUP_KINDS = Object.keys(CUPS);
-
-  var VESSEL_NAMES = {
-    demitasse:"Demitasse Fincanı",
-    smallGlass:"Küçük Cam Bardak (Cortado tipi)",
-    cappuccinoCup:"Kapuçino Fincanı",
-    tallGlass:"Latte Bardağı",
-    mug:"Kupa (Mug)",
-    tallGlassIce:"Uzun Buzlu Servis Bardağı",
-    v60:"V60 Huni + Sürahi",
-    chemex:"Chemex Sürahisi",
-    frenchpress:"French Press Haznesi",
-    aeropress:"Aeropress Haznesi",
-    mokapot:"Moka Pot Haznesi",
-    drip:"Filtre Kahve Sürahisi (Karaf)",
-    cezve:"Cezve / İbrik",
-    bowl:"Kahve Kâsesi (Bol)"
-  };
-  function vesselCapacity(kind){
-    if(CUPS[kind]) return CUPS[kind].capacity;
-    var e = equip(kind);
-    return e ? e.capacity : null;
-  }
 
   function drawLiquid(layers, capacity, topY, botY, w){
     var total = layers.reduce(function(s,l){return s+l[1];},0);
@@ -600,78 +643,113 @@
     return '<svg class="vessel-svg" viewBox="0 0 '+W+' '+H+'" xmlns="http://www.w3.org/2000/svg">'+out+'</svg>';
   }
 
-  /* ---------- data ---------- */
+  var VESSEL_NAMES = {
+    demitasse:{tr:"Demitasse Fincanı", en:"Demitasse Cup"},
+    smallGlass:{tr:"Küçük Cam Bardak (Cortado tipi)", en:"Small Glass (Cortado-style)"},
+    cappuccinoCup:{tr:"Kapuçino Fincanı", en:"Cappuccino Cup"},
+    tallGlass:{tr:"Latte Bardağı", en:"Latte Glass"},
+    mug:{tr:"Kupa (Mug)", en:"Mug"},
+    tallGlassIce:{tr:"Uzun Buzlu Servis Bardağı", en:"Tall Iced Serving Glass"},
+    v60:{tr:"V60 Huni + Sürahi", en:"V60 Dripper + Carafe"},
+    chemex:{tr:"Chemex Sürahisi", en:"Chemex Carafe"},
+    frenchpress:{tr:"French Press Haznesi", en:"French Press Chamber"},
+    aeropress:{tr:"Aeropress Haznesi", en:"Aeropress Chamber"},
+    mokapot:{tr:"Moka Pot Haznesi", en:"Moka Pot Chamber"},
+    drip:{tr:"Filtre Kahve Sürahisi (Karaf)", en:"Drip Coffee Carafe"},
+    cezve:{tr:"Cezve / İbrik", en:"Cezve / Ibrik Pot"},
+    bowl:{tr:"Kahve Kâsesi (Bol)", en:"Coffee Bowl"}
+  };
+  function vesselCapacity(kind){
+    if(CUPS[kind]) return CUPS[kind].capacity;
+    var e = equip(kind);
+    return e ? e.capacity : null;
+  }
+
+  /* ---------- data (single source of truth, tr/en per field) ---------- */
   var CATEGORIES = [
     {
       id:"espresso", accent:"--accent", num:"01",
-      title:"Espresso Bazlı",
-      sub:"Espresso makinesinde çekilen tek/çift shot üzerine kurulu klasik kafe menüsü.",
-      origin:"Brezilya, Guatemala ya da Kolombiya ağırlıklı blend — doğal düşük asiditeleri ve fındık/çikolata notaları sayesinde yüksek basınçlı çekimde ekşimezler, kalın crema ve dengeli gövde verirler.",
-      tips:["Çekirdeği demlemeden hemen önce öğütün; öğütülmüş kahve dakikalar içinde aroma kaybeder.","Dozu hassas bir teraziyle tartın — 1 gramlık fark bile sonucu ekşi ya da acı yöne çekebilir."],
+      title:{tr:"Espresso Bazlı", en:"Espresso-Based"},
+      sub:{tr:"Espresso makinesinde çekilen tek/çift shot üzerine kurulu klasik kafe menüsü.", en:"The classic café menu, built on single and double shots pulled on an espresso machine."},
+      origin:{tr:"Brezilya, Guatemala ya da Kolombiya ağırlıklı blend — doğal düşük asiditeleri ve fındık/çikolata notaları sayesinde yüksek basınçlı çekimde ekşimezler, kalın crema ve dengeli gövde verirler.",
+        en:"Brazil, Guatemala, or Colombia-heavy blends — their naturally low acidity and nutty/chocolate notes stay smooth under high-pressure extraction, giving a thick crema and balanced body."},
+      tips:[
+        {tr:"Çekirdeği demlemeden hemen önce öğütün; öğütülmüş kahve dakikalar içinde aroma kaybeder.", en:"Grind the beans right before brewing; ground coffee loses aroma within minutes."},
+        {tr:"Dozu hassas bir teraziyle tartın — 1 gramlık fark bile sonucu ekşi ya da acı yöne çekebilir.", en:"Weigh the dose on a precise scale — even a 1-gram difference can push the shot sour or bitter."}
+      ],
       drinks:[
-        {name:"Ristretto", note:"Kısa ve yoğun çekim", dose:"18g", vessel:"demitasse", layers:[["espresso",20]], ratio:"1:1", ratioLabel:"kahve dozu : espresso çıkışı", roast:4, grind:"Espresso, çok ince", temp:"92–94°C", time:"15–20 sn", tool:"Espresso Makinesi"},
-        {name:"Espresso (Solo)", note:"Tek shot, klasik", dose:"9g", vessel:"demitasse", layers:[["espresso",30]], ratio:"1:3", ratioLabel:"kahve dozu : espresso çıkışı", roast:4, grind:"Espresso, ince", temp:"92–94°C", time:"25–30 sn", tool:"Espresso Makinesi"},
-        {name:"Doppio", note:"Çift shot espresso", dose:"18g", vessel:"demitasse", layers:[["espresso",60]], ratio:"1:3", ratioLabel:"kahve dozu : espresso çıkışı", roast:4, grind:"Espresso, ince", temp:"92–94°C", time:"25–30 sn", tool:"Espresso Makinesi"},
-        {name:"Lungo", note:"Uzun çekim, daha hafif", dose:"18g", vessel:"demitasse", layers:[["espresso",90]], ratio:"1:5", ratioLabel:"kahve dozu : espresso çıkışı", roast:4, grind:"Espresso, ince", temp:"92–94°C", time:"35–40 sn", tool:"Espresso Makinesi"},
-        {name:"Americano", note:"Espresso + sıcak su", dose:"18g", vessel:"mug", layers:[["espresso",60],["water",120]], ratio:"1:2", ratioLabel:"espresso : su", roast:4, grind:"Espresso, ince", temp:"92–94°C", time:"25–30 sn", tool:"Espresso Makinesi"},
-        {name:"Cortado", note:"Eşit espresso ve süt", dose:"18g", vessel:"smallGlass", layers:[["espresso",30],["milk",30]], ratio:"1:1", ratioLabel:"espresso : süt", roast:4, grind:"Espresso, ince", temp:"92–94°C", time:"25–30 sn", tool:"Espresso Mak. + Süt Buharlayıcı"},
-        {name:"Macchiato", note:"Espresso, azıcık köpük", dose:"9g", vessel:"demitasse", layers:[["espresso",30],["foam",10]], ratio:"3:1", ratioLabel:"espresso : köpük", roast:4, grind:"Espresso, ince", temp:"92–94°C", time:"25–30 sn", tool:"Espresso Mak. + Süt Buharlayıcı"},
-        {name:"Piccolo Latte", note:"Mini latte, güçlü kahve", dose:"18g", vessel:"smallGlass", layers:[["espresso",20],["milk",70],["foam",10]], ratio:"1:4", ratioLabel:"espresso : süt (köpük dahil)", roast:4, grind:"Espresso, çok ince", temp:"92–94°C", time:"15–20 sn", tool:"Espresso Mak. + Süt Buharlayıcı", servingCup:"Küçük Cam Bardak (Piccolo tipi)"},
-        {name:"Flat White", note:"İnce mikroköpük, yoğun kahve", dose:"18g", vessel:"cappuccinoCup", layers:[["espresso",30],["milk",140],["foam",10]], ratio:"1:5", ratioLabel:"espresso : süt (köpük dahil)", roast:3, origin:"Kolombiya ya da Etiyopya (single origin) — Kolombiya'nın karamelli dengesi ya da Etiyopya'nın meyvemsi parlaklığı, flat white'ın ince süt köpüğünün altında bile belirgin kalır.", grind:"Espresso, çok ince", temp:"92–94°C", time:"25–30 sn", tool:"Espresso Mak. + Süt Buharlayıcı"},
-        {name:"Cappuccino", note:"Eşit üçe bölünmüş klasik", dose:"18g", vessel:"cappuccinoCup", layers:[["espresso",60],["milk",60],["foam",60]], ratio:"1:1:1", ratioLabel:"espresso : süt : köpük", roast:4, grind:"Espresso, ince", temp:"92–94°C", time:"25–30 sn", tool:"Espresso Mak. + Süt Buharlayıcı"},
-        {name:"Latte", note:"Bol süt, ince köpük", dose:"18g", vessel:"tallGlass", layers:[["espresso",60],["milk",230],["foam",10]], ratio:"1:4", ratioLabel:"espresso : süt (köpük dahil)", roast:4, grind:"Espresso, ince", temp:"92–94°C", time:"25–30 sn", tool:"Espresso Mak. + Süt Buharlayıcı"},
-        {name:"Mocha", note:"Latte + çikolata sosu", dose:"18g", vessel:"tallGlass", layers:[["espresso",60],["choc",30],["milk",200],["foam",10]], ratio:"1:4", ratioLabel:"espresso : (çikolata + süt + köpük)", roast:4, grind:"Espresso, ince", temp:"92–94°C", time:"25–30 sn", tool:"Espresso Mak. + Süt Buharlayıcı"},
-        {name:"Affogato", note:"Sıcak shot, soğuk dondurma", dose:"9g", vessel:"smallGlass", layers:[["icecream",100],["espresso",30]], ratio:"—", roast:4, grind:"Espresso, ince", temp:"92–94°C", time:"25–30 sn", tool:"Espresso Makinesi", servingCup:"Küçük Cam Kâse (Tatlı Kâsesi)", tips:["Dondurma servis anına kadar dondurucuda kalmalı, erimeye başlamadan servis edilmeli."]},
-        {name:"Espresso Con Panna", note:"Üzeri çırpılmış krema", dose:"18g", vessel:"demitasse", layers:[["espresso",60],["cream",20]], ratio:"3:1", ratioLabel:"espresso : krema", roast:4, grind:"Espresso, ince", temp:"92–94°C", time:"25–30 sn", tool:"Espresso Makinesi"},
-        {name:"Long Black", note:"Su üzerine çekilmiş espresso, crema korunur", dose:"18g", vessel:"demitasse", layers:[["water",60],["espresso",30]], ratio:"1:2", ratioLabel:"espresso : su", roast:4, grind:"Espresso, ince", temp:"92–94°C", time:"25–30 sn", tool:"Espresso Makinesi", origin:"Brezilya, Guatemala ya da Kolombiya blend — Americano'nun tersi sırayla (önce su, üzerine espresso) hazırlanır, crema korunduğu için aroması daha belirgin kalır."},
-        {name:"Viyana Kahvesi (Einspänner)", note:"Bol krema ile, bardakta", dose:"18g", vessel:"smallGlass", layers:[["espresso",60],["cream",40]], ratio:"3:2", ratioLabel:"espresso : krema", roast:4, grind:"Espresso, ince", temp:"92–94°C", time:"25–30 sn", tool:"Espresso Makinesi", origin:"Brezilya ya da Guatemala blend — düşük asidite ve dengeli gövde, bol çırpılmış kremanın altında bile hissedilir; Viyana kahve evi geleneğinden gelir."}
+        {id:"ristretto", name:{tr:"Ristretto",en:"Ristretto"}, note:{tr:"Kısa ve yoğun çekim",en:"Short, intense shot"}, dose:"18g", vessel:"demitasse", layers:[["espresso",20]], ratio:"1:1", ratioLabel:{tr:"kahve dozu : espresso çıkışı",en:"coffee dose : espresso yield"}, roast:4, grind:{tr:"Espresso, çok ince",en:"Espresso, very fine"}, temp:"92–94°C", time:{tr:"15–20 sn",en:"15–20 sec"}, tool:{tr:"Espresso Makinesi",en:"Espresso Machine"}},
+        {id:"espresso-solo", name:{tr:"Espresso (Solo)",en:"Espresso (Solo)"}, note:{tr:"Tek shot, klasik",en:"Single shot, classic"}, dose:"9g", vessel:"demitasse", layers:[["espresso",30]], ratio:"1:3", ratioLabel:{tr:"kahve dozu : espresso çıkışı",en:"coffee dose : espresso yield"}, roast:4, grind:{tr:"Espresso, ince",en:"Espresso, fine"}, temp:"92–94°C", time:{tr:"25–30 sn",en:"25–30 sec"}, tool:{tr:"Espresso Makinesi",en:"Espresso Machine"}},
+        {id:"doppio", name:{tr:"Doppio",en:"Doppio"}, note:{tr:"Çift shot espresso",en:"Double shot espresso"}, dose:"18g", vessel:"demitasse", layers:[["espresso",60]], ratio:"1:3", ratioLabel:{tr:"kahve dozu : espresso çıkışı",en:"coffee dose : espresso yield"}, roast:4, grind:{tr:"Espresso, ince",en:"Espresso, fine"}, temp:"92–94°C", time:{tr:"25–30 sn",en:"25–30 sec"}, tool:{tr:"Espresso Makinesi",en:"Espresso Machine"}},
+        {id:"lungo", name:{tr:"Lungo",en:"Lungo"}, note:{tr:"Uzun çekim, daha hafif",en:"Long pull, lighter"}, dose:"18g", vessel:"demitasse", layers:[["espresso",90]], ratio:"1:5", ratioLabel:{tr:"kahve dozu : espresso çıkışı",en:"coffee dose : espresso yield"}, roast:4, grind:{tr:"Espresso, ince",en:"Espresso, fine"}, temp:"92–94°C", time:{tr:"35–40 sn",en:"35–40 sec"}, tool:{tr:"Espresso Makinesi",en:"Espresso Machine"}},
+        {id:"americano", name:{tr:"Americano",en:"Americano"}, note:{tr:"Espresso + sıcak su",en:"Espresso + hot water"}, dose:"18g", vessel:"mug", layers:[["espresso",60],["water",120]], ratio:"1:2", ratioLabel:{tr:"espresso : su",en:"espresso : water"}, roast:4, grind:{tr:"Espresso, ince",en:"Espresso, fine"}, temp:"92–94°C", time:{tr:"25–30 sn",en:"25–30 sec"}, tool:{tr:"Espresso Makinesi",en:"Espresso Machine"}},
+        {id:"cortado", name:{tr:"Cortado",en:"Cortado"}, note:{tr:"Eşit espresso ve süt",en:"Equal parts espresso and milk"}, dose:"18g", vessel:"smallGlass", layers:[["espresso",30],["milk",30]], ratio:"1:1", ratioLabel:{tr:"espresso : süt",en:"espresso : milk"}, roast:4, grind:{tr:"Espresso, ince",en:"Espresso, fine"}, temp:"92–94°C", time:{tr:"25–30 sn",en:"25–30 sec"}, tool:{tr:"Espresso Mak. + Süt Buharlayıcı",en:"Espresso Machine + Milk Steamer"}},
+        {id:"macchiato", name:{tr:"Macchiato",en:"Macchiato"}, note:{tr:"Espresso, azıcık köpük",en:"Espresso with a touch of foam"}, dose:"9g", vessel:"demitasse", layers:[["espresso",30],["foam",10]], ratio:"3:1", ratioLabel:{tr:"espresso : köpük",en:"espresso : foam"}, roast:4, grind:{tr:"Espresso, ince",en:"Espresso, fine"}, temp:"92–94°C", time:{tr:"25–30 sn",en:"25–30 sec"}, tool:{tr:"Espresso Mak. + Süt Buharlayıcı",en:"Espresso Machine + Milk Steamer"}},
+        {id:"piccolo-latte", name:{tr:"Piccolo Latte",en:"Piccolo Latte"}, note:{tr:"Mini latte, güçlü kahve",en:"Mini latte, strong coffee"}, dose:"18g", vessel:"smallGlass", layers:[["espresso",20],["milk",70],["foam",10]], ratio:"1:4", ratioLabel:{tr:"espresso : süt (köpük dahil)",en:"espresso : milk (foam included)"}, roast:4, grind:{tr:"Espresso, çok ince",en:"Espresso, very fine"}, temp:"92–94°C", time:{tr:"15–20 sn",en:"15–20 sec"}, tool:{tr:"Espresso Mak. + Süt Buharlayıcı",en:"Espresso Machine + Milk Steamer"}, servingCup:{tr:"Küçük Cam Bardak (Piccolo tipi)",en:"Small Glass (Piccolo-style)"}},
+        {id:"flat-white", name:{tr:"Flat White",en:"Flat White"}, note:{tr:"İnce mikroköpük, yoğun kahve",en:"Fine microfoam, intense coffee"}, dose:"18g", vessel:"cappuccinoCup", layers:[["espresso",30],["milk",140],["foam",10]], ratio:"1:5", ratioLabel:{tr:"espresso : süt (köpük dahil)",en:"espresso : milk (foam included)"}, roast:3, origin:{tr:"Kolombiya ya da Etiyopya (single origin) — Kolombiya'nın karamelli dengesi ya da Etiyopya'nın meyvemsi parlaklığı, flat white'ın ince süt köpüğünün altında bile belirgin kalır.", en:"Colombia or Ethiopia (single origin) — Colombia's caramel balance or Ethiopia's fruity brightness stays noticeable even under the flat white's thin milk foam."}, grind:{tr:"Espresso, çok ince",en:"Espresso, very fine"}, temp:"92–94°C", time:{tr:"25–30 sn",en:"25–30 sec"}, tool:{tr:"Espresso Mak. + Süt Buharlayıcı",en:"Espresso Machine + Milk Steamer"}},
+        {id:"cappuccino", name:{tr:"Cappuccino",en:"Cappuccino"}, note:{tr:"Eşit üçe bölünmüş klasik",en:"Classic split into equal thirds"}, dose:"18g", vessel:"cappuccinoCup", layers:[["espresso",60],["milk",60],["foam",60]], ratio:"1:1:1", ratioLabel:{tr:"espresso : süt : köpük",en:"espresso : milk : foam"}, roast:4, grind:{tr:"Espresso, ince",en:"Espresso, fine"}, temp:"92–94°C", time:{tr:"25–30 sn",en:"25–30 sec"}, tool:{tr:"Espresso Mak. + Süt Buharlayıcı",en:"Espresso Machine + Milk Steamer"}},
+        {id:"latte", name:{tr:"Latte",en:"Latte"}, note:{tr:"Bol süt, ince köpük",en:"Plenty of milk, thin foam"}, dose:"18g", vessel:"tallGlass", layers:[["espresso",60],["milk",230],["foam",10]], ratio:"1:4", ratioLabel:{tr:"espresso : süt (köpük dahil)",en:"espresso : milk (foam included)"}, roast:4, grind:{tr:"Espresso, ince",en:"Espresso, fine"}, temp:"92–94°C", time:{tr:"25–30 sn",en:"25–30 sec"}, tool:{tr:"Espresso Mak. + Süt Buharlayıcı",en:"Espresso Machine + Milk Steamer"}},
+        {id:"mocha", name:{tr:"Mocha",en:"Mocha"}, note:{tr:"Latte + çikolata sosu",en:"Latte + chocolate sauce"}, dose:"18g", vessel:"tallGlass", layers:[["espresso",60],["choc",30],["milk",200],["foam",10]], ratio:"1:4", ratioLabel:{tr:"espresso : (çikolata + süt + köpük)",en:"espresso : (chocolate + milk + foam)"}, roast:4, grind:{tr:"Espresso, ince",en:"Espresso, fine"}, temp:"92–94°C", time:{tr:"25–30 sn",en:"25–30 sec"}, tool:{tr:"Espresso Mak. + Süt Buharlayıcı",en:"Espresso Machine + Milk Steamer"}},
+        {id:"affogato", name:{tr:"Affogato",en:"Affogato"}, note:{tr:"Sıcak shot, soğuk dondurma",en:"Hot shot, cold ice cream"}, dose:"9g", vessel:"smallGlass", layers:[["icecream",100],["espresso",30]], ratio:"—", roast:4, grind:{tr:"Espresso, ince",en:"Espresso, fine"}, temp:"92–94°C", time:{tr:"25–30 sn",en:"25–30 sec"}, tool:{tr:"Espresso Makinesi",en:"Espresso Machine"}, servingCup:{tr:"Küçük Cam Kâse (Tatlı Kâsesi)",en:"Small Glass Bowl (Dessert Dish)"}, tips:[{tr:"Dondurma servis anına kadar dondurucuda kalmalı, erimeye başlamadan servis edilmeli.", en:"Keep the ice cream in the freezer until serving, and serve before it starts to melt."}]},
+        {id:"espresso-con-panna", name:{tr:"Espresso Con Panna",en:"Espresso Con Panna"}, note:{tr:"Üzeri çırpılmış krema",en:"Topped with whipped cream"}, dose:"18g", vessel:"demitasse", layers:[["espresso",60],["cream",20]], ratio:"3:1", ratioLabel:{tr:"espresso : krema",en:"espresso : cream"}, roast:4, grind:{tr:"Espresso, ince",en:"Espresso, fine"}, temp:"92–94°C", time:{tr:"25–30 sn",en:"25–30 sec"}, tool:{tr:"Espresso Makinesi",en:"Espresso Machine"}},
+        {id:"long-black", name:{tr:"Long Black",en:"Long Black"}, note:{tr:"Su üzerine çekilmiş espresso, crema korunur",en:"Espresso pulled over water, crema preserved"}, dose:"18g", vessel:"demitasse", layers:[["water",60],["espresso",30]], ratio:"1:2", ratioLabel:{tr:"espresso : su",en:"espresso : water"}, roast:4, grind:{tr:"Espresso, ince",en:"Espresso, fine"}, temp:"92–94°C", time:{tr:"25–30 sn",en:"25–30 sec"}, tool:{tr:"Espresso Makinesi",en:"Espresso Machine"}, origin:{tr:"Brezilya, Guatemala ya da Kolombiya blend — Americano'nun tersi sırayla (önce su, üzerine espresso) hazırlanır, crema korunduğu için aroması daha belirgin kalır.", en:"Brazil, Guatemala, or Colombia blend — made in reverse order from an Americano (water first, espresso on top); since the crema survives, the aroma stays more pronounced."}},
+        {id:"vienna", name:{tr:"Viyana Kahvesi (Einspänner)",en:"Vienna Coffee (Einspänner)"}, note:{tr:"Bol krema ile, bardakta",en:"With plenty of cream, in a glass"}, dose:"18g", vessel:"smallGlass", layers:[["espresso",60],["cream",40]], ratio:"3:2", ratioLabel:{tr:"espresso : krema",en:"espresso : cream"}, roast:4, grind:{tr:"Espresso, ince",en:"Espresso, fine"}, temp:"92–94°C", time:{tr:"25–30 sn",en:"25–30 sec"}, tool:{tr:"Espresso Makinesi",en:"Espresso Machine"}, origin:{tr:"Brezilya ya da Guatemala blend — düşük asidite ve dengeli gövde, bol çırpılmış kremanın altında bile hissedilir; Viyana kahve evi geleneğinden gelir.", en:"Brazil or Guatemala blend — low acidity and balanced body still comes through under the generous whipped cream; a tradition from Vienna's coffee-house culture."}}
       ]
     },
     {
       id:"soguk", accent:"--accent-cold", num:"02",
-      title:"Soğuk Kahveler",
-      sub:"Buzla ya da uzun süre soğukta demlenerek servis edilen versiyonlar.",
-      tips:["Buz erimeden servis edin; bekleyen buzlu kahve hızla sulanıp oranı bozar.","Bardağı önceden soğutmak buzun daha yavaş erimesini ve oranın daha uzun korunmasını sağlar."],
+      title:{tr:"Soğuk Kahveler", en:"Cold Coffees"},
+      sub:{tr:"Buzla ya da uzun süre soğukta demlenerek servis edilen versiyonlar.", en:"Versions served over ice or brewed cold over a long steep."},
+      tips:[
+        {tr:"Buz erimeden servis edin; bekleyen buzlu kahve hızla sulanıp oranı bozar.", en:"Serve before the ice melts; a lingering iced coffee dilutes fast and throws off the ratio."},
+        {tr:"Bardağı önceden soğutmak buzun daha yavaş erimesini ve oranın daha uzun korunmasını sağlar.", en:"Pre-chilling the glass slows ice melt and keeps the ratio right for longer."}
+      ],
       drinks:[
-        {name:"Cold Brew", note:"12–16 saat soğuk demleme", dose:"100g", vessel:"tallGlassIce", layers:[["coldbrew",120],["water",120]], ratio:"1:1", ratioLabel:"konsantre : su", roast:4, iced:true, grind:"Kalın", temp:"Oda sıcaklığı / buzdolabı", time:"12–16 saat", tool:"Kavanoz / Cold Brew Demleyici", origin:"Brezilya ya da Sumatra — düşük asiditeleri ve doğal çikolata/toprak notaları sayesinde 12+ saatlik uzun temasta bile acılaşmaz, pürüzsüz kalır.", tips:["Demleme (kavanozda): 100g kalın çekilmiş kahve : 1000ml soğuk su, oranı 1:10.","Kalın öğütüm şart; ince öğütüm bulanık ve aşırı ekstrakte bir sonuç verir."]},
-        {name:"Iced Americano", note:"Buz üzerine espresso ve su", dose:"18g", vessel:"tallGlassIce", layers:[["espresso",60],["water",150]], ratio:"1:2.5", ratioLabel:"espresso : su", roast:4, iced:true, grind:"Espresso, ince", temp:"92–94°C", time:"25–30 sn", tool:"Espresso Makinesi", origin:"Brezilya, Guatemala ya da Kolombiya blend — düşük asiditeleri sayesinde buzla seyrelince de ekşimez, sıcak Americano ile aynı dengeyi korur."},
-        {name:"Iced Latte", note:"Buzlu süt, ince espresso katmanı", dose:"18g", vessel:"tallGlassIce", layers:[["espresso",30],["milk",210]], ratio:"1:7", ratioLabel:"espresso : süt", roast:4, iced:true, grind:"Espresso, çok ince", temp:"92–94°C", time:"25–30 sn", tool:"Espresso Mak. + Soğuk Süt", origin:"Kolombiya ya da Brezilya — karamel ve fındık notaları soğuk sütle birleşince tatlılığı öne çıkarır, buzda da lezzeti kaybolmaz."}
+        {id:"cold-brew", name:{tr:"Cold Brew",en:"Cold Brew"}, note:{tr:"12–16 saat soğuk demleme",en:"12–16 hour cold steep"}, dose:"100g", vessel:"tallGlassIce", layers:[["condensedmilk",0],["coldbrew",120]], ratio:"1:1", ratioLabel:{tr:"konsantre : su",en:"concentrate : water"}, roast:4, iced:true, grind:{tr:"Kalın",en:"Coarse"}, temp:{tr:"Oda sıcaklığı / buzdolabı",en:"Room temperature / refrigerator"}, time:{tr:"12–16 saat",en:"12–16 hours"}, tool:{tr:"Kavanoz / Cold Brew Demleyici",en:"Jar / Cold Brew Maker"}, origin:{tr:"Brezilya ya da Sumatra — düşük asiditeleri ve doğal çikolata/toprak notaları sayesinde 12+ saatlik uzun temasta bile acılaşmaz, pürüzsüz kalır.", en:"Brazil or Sumatra — their low acidity and natural chocolate/earthy notes stay smooth without turning bitter even after 12+ hours of contact."}, tips:[{tr:"Demleme (kavanozda): 100g kalın çekilmiş kahve : 1000ml soğuk su, oranı 1:10.", en:"Brewing (in the jar): 100g coarsely ground coffee : 1000ml cold water, a 1:10 ratio."},{tr:"Kalın öğütüm şart; ince öğütüm bulanık ve aşırı ekstrakte bir sonuç verir.", en:"A coarse grind is essential; a fine grind gives a cloudy, over-extracted result."}]},
+        {id:"iced-americano", name:{tr:"Iced Americano",en:"Iced Americano"}, note:{tr:"Buz üzerine espresso ve su",en:"Espresso and water over ice"}, dose:"18g", vessel:"tallGlassIce", layers:[["espresso",60],["water",150]], ratio:"1:2.5", ratioLabel:{tr:"espresso : su",en:"espresso : water"}, roast:4, iced:true, grind:{tr:"Espresso, ince",en:"Espresso, fine"}, temp:"92–94°C", time:{tr:"25–30 sn",en:"25–30 sec"}, tool:{tr:"Espresso Makinesi",en:"Espresso Machine"}, origin:{tr:"Brezilya, Guatemala ya da Kolombiya blend — düşük asiditeleri sayesinde buzla seyrelince de ekşimez, sıcak Americano ile aynı dengeyi korur.", en:"Brazil, Guatemala, or Colombia blend — its low acidity doesn't turn sour when diluted with ice, keeping the same balance as the hot Americano."}},
+        {id:"iced-latte", name:{tr:"Iced Latte",en:"Iced Latte"}, note:{tr:"Buzlu süt, ince espresso katmanı",en:"Cold milk, a thin espresso layer"}, dose:"18g", vessel:"tallGlassIce", layers:[["espresso",30],["milk",210]], ratio:"1:7", ratioLabel:{tr:"espresso : süt",en:"espresso : milk"}, roast:4, iced:true, grind:{tr:"Espresso, çok ince",en:"Espresso, very fine"}, temp:"92–94°C", time:{tr:"25–30 sn",en:"25–30 sec"}, tool:{tr:"Espresso Mak. + Soğuk Süt",en:"Espresso Machine + Cold Milk"}, origin:{tr:"Kolombiya ya da Brezilya — karamel ve fındık notaları soğuk sütle birleşince tatlılığı öne çıkarır, buzda da lezzeti kaybolmaz.", en:"Colombia or Brazil — caramel and nutty notes bring out sweetness when combined with cold milk, without losing flavor over ice."}}
       ]
     },
     {
       id:"filtre", accent:"--accent-filter", num:"03",
-      title:"Filtre & Manuel Demleme",
-      sub:"Kahve ile suyun doğrudan temas ettiği, makinesiz ya da damlatmalı yöntemler.",
-      tips:["Su kalitesi belirleyicidir: filtrelenmiş, TDS 75–250 ppm arası su kullanın."],
+      title:{tr:"Filtre & Manuel Demleme", en:"Filter & Manual Brewing"},
+      sub:{tr:"Kahve ile suyun doğrudan temas ettiği, makinesiz ya da damlatmalı yöntemler.", en:"Methods where coffee and water meet directly — manual or drip, without an espresso machine."},
+      tips:[{tr:"Su kalitesi belirleyicidir: filtrelenmiş, TDS 75–250 ppm arası su kullanın.", en:"Water quality is decisive: use filtered water with TDS between 75–250 ppm."}],
       drinks:[
-        {name:"V60", note:"Elde damlatma, temiz profil", dose:"15g", vessel:"v60", layers:[["water",250]], ratio:"1:17", ratioLabel:"kahve : su", roast:2, origin:"Etiyopya Yirgacheffe ya da Kenya AA — yüksek asiditeleri ve çiçeksi/turunçgil notaları, ince gövdeli filtre demlemesinde en net şekilde ortaya çıkar.", grind:"Orta-ince", temp:"92–96°C", time:"2:30–3:00 dk", tool:"V60 Dripper + Filtre Kağıdı", servingCup:"Kupa ya da Fincan"},
-        {name:"Chemex", note:"Kalın filtre, yumuşak içim", dose:"30g", vessel:"chemex", layers:[["water",500]], ratio:"1:17", ratioLabel:"kahve : su", roast:2, origin:"Kolombiya ya da Etiyopya — kalın kağıt filtrenin yağları süzmesi sayesinde bu kökenlerin temiz, karamelli asiditesi bulanıklaşmadan öne çıkar.", grind:"Kaba-orta", temp:"92–96°C", time:"4–5 dk", tool:"Chemex + Kalın Filtre", servingCup:"Kupa ya da Fincan"},
-        {name:"French Press", note:"Tam gövdeli, yağlı doku", dose:"15g", vessel:"frenchpress", layers:[["water",250]], ratio:"1:16", ratioLabel:"kahve : su", roast:3, origin:"Sumatra ya da Brezilya — düşük asidite ve toprağımsı/baharatlı ağırlıkları, metal filtrenin bıraktığı yağlarla birleşince tam gövdeli bir içim yaratır.", tips:["Pistonu hızlı bastırmayın; telve karışıp acılık oluşturur."], grind:"Kaba", temp:"92–96°C", time:"4 dk demleme + bas", tool:"French Press (Piston)", servingCup:"Kupa (Mug)"},
-        {name:"Aeropress", note:"Hızlı, çok yönlü", dose:"16g", vessel:"aeropress", layers:[["water",220]], ratio:"1:14", ratioLabel:"kahve : su", roast:2, origin:"Etiyopya ya da Kosta Rika — parlak asiditeleri, kısa temas süresine ve esnek basınçlı demlemeye hızla yanıt vererek canlı bir fincan verir.", grind:"Orta-ince", temp:"85–92°C", time:"1–2 dk + 30 sn pres", tool:"Aeropress", servingCup:"Kupa ya da Fincan"},
-        {name:"Moka Pot", note:"Ocak üstü, yoğun ve güçlü", dose:"18g", vessel:"mokapot", layers:[["water",180]], ratio:"1:10", ratioLabel:"kahve : su", roast:4, origin:"Brezilya ya da koyu İtalyan tarzı blend — düşük asidite ve yoğun gövdeleri, moka potun yüksek basınç ve sıcaklığında acılaşmadan güçlü bir kahve verir.", tips:["Sepetteki kahveyi sıkıştırmayın; moka potun düşük basıncında sıkıştırma tıkanıklığa ve acı bir sonuca yol açar."], grind:"Orta-ince (tuz tanesi)", temp:"Orta ateş", time:"4–5 dk", tool:"Ocak Üstü Moka Pot", servingCup:"Demitasse Fincanı"},
-        {name:"Filtre Kahve Makinesi", note:"Otomatik damlatma", dose:"60g", vessel:"drip", layers:[["water",1000]], ratio:"1:17", ratioLabel:"kahve : su", roast:3, origin:"Kolombiya ya da Guatemala — dengeli asidite ve karamelli tatlılıkları, günlük ve tutarlı damlatma demlemesinde her seferinde aynı sonucu verir.", grind:"Orta", temp:"Otomatik ~92–96°C", time:"4–6 dk", tool:"Damlatmalı Filtre Makinesi", servingCup:"Kupa (Mug)"}
+        {id:"v60", name:{tr:"V60",en:"V60"}, note:{tr:"Elde damlatma, temiz profil",en:"Hand pour-over, clean profile"}, dose:"15g", vessel:"v60", layers:[["water",250]], ratio:"1:17", ratioLabel:{tr:"kahve : su",en:"coffee : water"}, roast:2, origin:{tr:"Etiyopya Yirgacheffe ya da Kenya AA — yüksek asiditeleri ve çiçeksi/turunçgil notaları, ince gövdeli filtre demlemesinde en net şekilde ortaya çıkar.", en:"Ethiopia Yirgacheffe or Kenya AA — their high acidity and floral/citrus notes come through most clearly in a light-bodied filter brew."}, grind:{tr:"Orta-ince",en:"Medium-fine"}, temp:"92–96°C", time:{tr:"2:30–3:00 dk",en:"2:30–3:00 min"}, tool:{tr:"V60 Dripper + Filtre Kağıdı",en:"V60 Dripper + Paper Filter"}, servingCup:{tr:"Kupa ya da Fincan",en:"Mug or Cup"}},
+        {id:"chemex", name:{tr:"Chemex",en:"Chemex"}, note:{tr:"Kalın filtre, yumuşak içim",en:"Thick filter, smooth cup"}, dose:"30g", vessel:"chemex", layers:[["water",500]], ratio:"1:17", ratioLabel:{tr:"kahve : su",en:"coffee : water"}, roast:2, origin:{tr:"Kolombiya ya da Etiyopya — kalın kağıt filtrenin yağları süzmesi sayesinde bu kökenlerin temiz, karamelli asiditesi bulanıklaşmadan öne çıkar.", en:"Colombia or Ethiopia — the thick paper filter strains out oils, letting these origins' clean, caramel acidity come through without murkiness."}, grind:{tr:"Kaba-orta",en:"Medium-coarse"}, temp:"92–96°C", time:{tr:"4–5 dk",en:"4–5 min"}, tool:{tr:"Chemex + Kalın Filtre",en:"Chemex + Thick Filter"}, servingCup:{tr:"Kupa ya da Fincan",en:"Mug or Cup"}},
+        {id:"french-press", name:{tr:"French Press",en:"French Press"}, note:{tr:"Tam gövdeli, yağlı doku",en:"Full-bodied, oily texture"}, dose:"15g", vessel:"frenchpress", layers:[["water",250]], ratio:"1:16", ratioLabel:{tr:"kahve : su",en:"coffee : water"}, roast:3, origin:{tr:"Sumatra ya da Brezilya — düşük asidite ve toprağımsı/baharatlı ağırlıkları, metal filtrenin bıraktığı yağlarla birleşince tam gövdeli bir içim yaratır.", en:"Sumatra or Brazil — low acidity and earthy/spiced weight combine with the oils the metal filter lets through to create a full-bodied cup."}, tips:[{tr:"Pistonu hızlı bastırmayın; telve karışıp acılık oluşturur.", en:"Don't plunge fast; it stirs up the grounds and creates bitterness."}], grind:{tr:"Kaba",en:"Coarse"}, temp:"92–96°C", time:{tr:"4 dk demleme + bas",en:"4 min steep + press"}, tool:{tr:"French Press (Piston)",en:"French Press (Plunger)"}, servingCup:{tr:"Kupa (Mug)",en:"Mug"}},
+        {id:"aeropress", name:{tr:"Aeropress",en:"Aeropress"}, note:{tr:"Hızlı, çok yönlü",en:"Fast, versatile"}, dose:"16g", vessel:"aeropress", layers:[["water",220]], ratio:"1:14", ratioLabel:{tr:"kahve : su",en:"coffee : water"}, roast:2, origin:{tr:"Etiyopya ya da Kosta Rika — parlak asiditeleri, kısa temas süresine ve esnek basınçlı demlemeye hızla yanıt vererek canlı bir fincan verir.", en:"Ethiopia or Costa Rica — their bright acidity responds quickly to the short contact time and gentle pressure, giving a lively cup."}, grind:{tr:"Orta-ince",en:"Medium-fine"}, temp:"85–92°C", time:{tr:"1–2 dk + 30 sn pres",en:"1–2 min + 30 sec press"}, tool:{tr:"Aeropress",en:"Aeropress"}, servingCup:{tr:"Kupa ya da Fincan",en:"Mug or Cup"}},
+        {id:"moka-pot", name:{tr:"Moka Pot",en:"Moka Pot"}, note:{tr:"Ocak üstü, yoğun ve güçlü",en:"Stovetop, intense and strong"}, dose:"18g", vessel:"mokapot", layers:[["water",180]], ratio:"1:10", ratioLabel:{tr:"kahve : su",en:"coffee : water"}, roast:4, origin:{tr:"Brezilya ya da koyu İtalyan tarzı blend — düşük asidite ve yoğun gövdeleri, moka potun yüksek basınç ve sıcaklığında acılaşmadan güçlü bir kahve verir.", en:"Brazil or a dark Italian-style blend — low acidity and heavy body give a strong cup under the moka pot's high pressure and heat without turning bitter."}, tips:[{tr:"Sepetteki kahveyi sıkıştırmayın; moka potun düşük basıncında sıkıştırma tıkanıklığa ve acı bir sonuca yol açar.", en:"Don't tamp the coffee in the basket; at the moka pot's low pressure, tamping causes clogging and a bitter result."}], grind:{tr:"Orta-ince (tuz tanesi)",en:"Medium-fine (table salt)"}, temp:{tr:"Orta ateş",en:"Medium heat"}, time:{tr:"4–5 dk",en:"4–5 min"}, tool:{tr:"Ocak Üstü Moka Pot",en:"Stovetop Moka Pot"}, servingCup:{tr:"Demitasse Fincanı",en:"Demitasse Cup"}},
+        {id:"drip", name:{tr:"Filtre Kahve Makinesi",en:"Drip Coffee Maker"}, note:{tr:"Otomatik damlatma",en:"Automatic drip"}, dose:"60g", vessel:"drip", layers:[["water",1000]], ratio:"1:17", ratioLabel:{tr:"kahve : su",en:"coffee : water"}, roast:3, origin:{tr:"Kolombiya ya da Guatemala — dengeli asidite ve karamelli tatlılıkları, günlük ve tutarlı damlatma demlemesinde her seferinde aynı sonucu verir.", en:"Colombia or Guatemala — balanced acidity and caramel sweetness give the same result every time in a consistent daily drip brew."}, grind:{tr:"Orta",en:"Medium"}, temp:{tr:"Otomatik ~92–96°C",en:"Automatic ~92–96°C"}, time:{tr:"4–6 dk",en:"4–6 min"}, tool:{tr:"Damlatmalı Filtre Makinesi",en:"Automatic Drip Machine"}, servingCup:{tr:"Kupa (Mug)",en:"Mug"}}
       ]
     },
     {
       id:"geleneksel", accent:"--accent-trad", num:"04",
-      title:"Geleneksel",
-      sub:"Kum ya da ocakta, cezve içinde köpüklü pişirilen yöntem.",
-      tips:["Öğütüm mutlaka pudra kıvamında olmalı — kalın öğütümde köpük tutmaz.","Soğuk ve yumuşak (az kireçli) su kullanmak daha kalıcı bir köpük verir."],
+      title:{tr:"Geleneksel", en:"Traditional"},
+      sub:{tr:"Kum ya da ocakta, cezve içinde köpüklü pişirilen yöntem.", en:"Brewed with foam in a small pot, over sand or a stovetop flame."},
+      tips:[
+        {tr:"Öğütüm mutlaka pudra kıvamında olmalı — kalın öğütümde köpük tutmaz.", en:"The grind must be powder-fine — a coarser grind won't hold the foam."},
+        {tr:"Soğuk ve yumuşak (az kireçli) su kullanmak daha kalıcı bir köpük verir.", en:"Cold, soft (low-mineral) water gives a longer-lasting foam."}
+      ],
       drinks:[
-        {name:"Türk Kahvesi", note:"Cezvede, kısık ateşte, köpüklü", dose:"7g", doseHint:"1 dolu kahve kaşığı", vessel:"cezve", layers:[["water",65]], ratio:"1:9", ratioLabel:"kahve : su", roast:4, origin:"Brezilya (düşük asidite) ya da Yemen Harar stili (yoğun, şaraba yakın meyvemsi karakter) — pudra inceliğindeki öğütümde yoğunlaşan tada iyi eşlik eder.", grind:"Toz (çok ince)", temp:"Kısık ateş", time:"4–5 dk", tool:"Cezve / İbrik", servingCup:"Türk Kahve Fincanı (~60–70 ml)"}
+        {id:"turkish-coffee", name:{tr:"Türk Kahvesi",en:"Turkish Coffee"}, note:{tr:"Cezvede, kısık ateşte, köpüklü",en:"In a cezve, over low heat, with foam"}, dose:"7g", doseHint:{tr:"1 dolu kahve kaşığı",en:"1 heaped coffee spoon"}, vessel:"cezve", layers:[["water",65]], ratio:"1:9", ratioLabel:{tr:"kahve : su",en:"coffee : water"}, roast:4, origin:{tr:"Brezilya (düşük asidite) ya da Yemen Harar stili (yoğun, şaraba yakın meyvemsi karakter) — pudra inceliğindeki öğütümde yoğunlaşan tada iyi eşlik eder.", en:"Brazil (low acidity) or Yemen Harar-style (intense, wine-like fruity character) — both complement the concentrated flavor that comes from the powder-fine grind."}, grind:{tr:"Toz (çok ince)",en:"Powder (very fine)"}, temp:{tr:"Kısık ateş",en:"Low heat"}, time:{tr:"4–5 dk",en:"4–5 min"}, tool:{tr:"Cezve / İbrik",en:"Cezve / Ibrik Pot"}, servingCup:{tr:"Türk Kahve Fincanı (~60–70 ml)",en:"Turkish Coffee Cup (~60–70 ml)"}}
       ]
     },
     {
       id:"dunya", accent:"--accent-world", num:"05",
-      title:"Dünyadan Kahveler",
-      sub:"Kendi ülkesine özgü ekipman ya da tekniği olan, dünya çapında tanınan yerel kahve kültürleri.",
-      tips:["Her ülkenin kendi damak zevkine göre şeker/tatlandırma oranı farklıdır; tarifler başlangıç noktasıdır.","Yerel ekipman (phin, džezva, shaker) bulunamıyorsa en yakın alternatif kullanılabilir, sonuç küçük farklılıklar gösterebilir."],
+      title:{tr:"Dünyadan Kahveler", en:"Coffees of the World"},
+      sub:{tr:"Kendi ülkesine özgü ekipman ya da tekniği olan, dünya çapında tanınan yerel kahve kültürleri.", en:"Globally recognized local coffee cultures, each with its own country-specific equipment or technique."},
+      tips:[
+        {tr:"Her ülkenin kendi damak zevkine göre şeker/tatlandırma oranı farklıdır; tarifler başlangıç noktasıdır.", en:"Sugar and sweetness levels vary by local taste in every country; these recipes are a starting point."},
+        {tr:"Yerel ekipman (phin, džezva, shaker) bulunamıyorsa en yakın alternatif kullanılabilir, sonuç küçük farklılıklar gösterebilir.", en:"If local equipment (phin, džezva, shaker) isn't available, the closest substitute works — expect small differences in the result."}
+      ],
       drinks:[
-        {name:"Vietnam Kahvesi", note:"Phin filtresi + koyulaştırılmış süt, buzlu", dose:"20g", doseHint:"yaklaşık 3–4 tatlı kaşığı", vessel:"tallGlassIce", layers:[["condensedmilk",45],["coffee",135]], ratio:"3:1", ratioLabel:"kahve : koyulaştırılmış süt", roast:5, iced:true, grind:"Orta-kalın (phin için)", temp:"90–96°C", time:"4–5 dk", tool:"Phin Filtresi + Bardak", origin:"Vietnam Robusta (ya da Robusta-Arabica blend) — güçlü, sert ve çikolatamsı yapısı koyulaştırılmış sütün yoğun tatlılığını dengeler."},
-        {name:"Yunan Frappe", note:"Çırpılmış hazır kahve köpüğü, buzlu", dose:"10g", doseHint:"2 tatlı kaşığı hazır (instant) kahve", vessel:"tallGlassIce", layers:[["coffee",90],["foam",90]], ratio:"1:1", ratioLabel:"kahve köpüğü : su", roast:5, iced:true, grind:"Öğütüm gerekmez (hazır/granül kahve)", temp:"Soğuk (buzlu su ile çırpılır)", time:"1–2 dk çırpma", tool:"Shaker / Kapaklı Kavanoz", origin:"Yunanistan/Kıbrıs'ta yaygın koyu kavrulmuş hazır (instant) kahve — çırpıldığında yoğun ve kalıcı bir köpük verir."},
-        {name:"Küba Kahvesi (Cortadito)", note:"Şekerle çırpılmış köpüklü espresso", dose:"18g", vessel:"demitasse", layers:[["espresso",30],["milk",10],["foam",10]], ratio:"3:2", ratioLabel:"espresso : süt (köpük dahil)", roast:5, grind:"Espresso, ince", temp:"92–94°C", time:"25–30 sn", tool:"Espresso Makinesi (ya da Moka Pot)", origin:"Küba ya da koyu kavrulmuş Orta Amerika blend — yoğun, düşük asiditeli yapı şekerle çırpılan köpüğün (espumita) kalıcı olmasını sağlar."},
-        {name:"Fransız Café au Lait", note:"Filtre kahve + sıcak süt, eşit oran, kâsede", dose:"15g", doseHint:"standart filtre kahve dozu", vessel:"bowl", layers:[["coffee",150],["milk",150]], ratio:"1:1", ratioLabel:"kahve : süt", roast:3, grind:"Orta (filtre kahve gibi)", temp:"92–96°C", time:"4 dk", tool:"Filtre Kahve Ekipmanı + Süt Tenceresi", origin:"Orta Amerika ya da Afrika kökenli orta kavrulmuş filtre kahvesi — eşit miktarda sütle karıştığında ekşimeden dengeli bir tat verir."},
-        {name:"Bosna Kahvesi", note:"Džezvede, Türk kahvesine benzer ama biraz daha kalın öğütülmüş", dose:"7g", doseHint:"1 dolu kahve kaşığı", vessel:"cezve", layers:[["water",65]], ratio:"1:9", ratioLabel:"kahve : su", roast:4, grind:"Toz (Türk kahvesinden biraz daha kalın)", temp:"Kısık ateş", time:"4–5 dk", tool:"Cezve / Džezva", servingCup:"Fildžan (Bosna Kahve Fincanı, ~60–70 ml)", origin:"Brezilya ya da Orta Amerika kökenli — Türk kahvesine yakın ama biraz daha kalın öğütülmüş çekirdek, kaynatılmadan yavaşça ısıtılan yönteme daha iyi uyum sağlar."}
+        {id:"vietnamese", name:{tr:"Vietnam Kahvesi",en:"Vietnamese Coffee"}, note:{tr:"Phin filtresi + koyulaştırılmış süt, buzlu",en:"Phin filter + condensed milk, iced"}, dose:"20g", doseHint:{tr:"yaklaşık 3–4 tatlı kaşığı",en:"about 3–4 teaspoons"}, vessel:"tallGlassIce", layers:[["condensedmilk",45],["coffee",135]], ratio:"3:1", ratioLabel:{tr:"kahve : koyulaştırılmış süt",en:"coffee : condensed milk"}, roast:5, iced:true, grind:{tr:"Orta-kalın (phin için)",en:"Medium-coarse (for the phin)"}, temp:"90–96°C", time:{tr:"4–5 dk",en:"4–5 min"}, tool:{tr:"Phin Filtresi + Bardak",en:"Phin Filter + Glass"}, origin:{tr:"Vietnam Robusta (ya da Robusta-Arabica blend) — güçlü, sert ve çikolatamsı yapısı koyulaştırılmış sütün yoğun tatlılığını dengeler.", en:"Vietnamese Robusta (or a Robusta-Arabica blend) — its strong, bold, chocolatey character balances the intense sweetness of the condensed milk."}},
+        {id:"greek-frappe", name:{tr:"Yunan Frappe",en:"Greek Frappé"}, note:{tr:"Çırpılmış hazır kahve köpüğü, buzlu",en:"Whipped instant coffee foam, iced"}, dose:"10g", doseHint:{tr:"2 tatlı kaşığı hazır (instant) kahve",en:"2 teaspoons instant coffee"}, vessel:"tallGlassIce", layers:[["coffee",90],["foam",90]], ratio:"1:1", ratioLabel:{tr:"kahve köpüğü : su",en:"coffee foam : water"}, roast:5, iced:true, grind:{tr:"Öğütüm gerekmez (hazır/granül kahve)",en:"No grinding needed (instant/granulated coffee)"}, temp:{tr:"Soğuk (buzlu su ile çırpılır)",en:"Cold (whipped with cold water)"}, time:{tr:"1–2 dk çırpma",en:"1–2 min whisking"}, tool:{tr:"Shaker / Kapaklı Kavanoz",en:"Shaker / Lidded Jar"}, origin:{tr:"Yunanistan/Kıbrıs'ta yaygın koyu kavrulmuş hazır (instant) kahve — çırpıldığında yoğun ve kalıcı bir köpük verir.", en:"Dark-roasted instant coffee common in Greece/Cyprus — whips up into a thick, long-lasting foam."}},
+        {id:"cortadito", name:{tr:"Küba Kahvesi (Cortadito)",en:"Cuban Coffee (Cortadito)"}, note:{tr:"Şekerle çırpılmış köpüklü espresso",en:"Espresso whipped with sugar into foam"}, dose:"18g", vessel:"demitasse", layers:[["espresso",30],["milk",10],["foam",10]], ratio:"3:2", ratioLabel:{tr:"espresso : süt (köpük dahil)",en:"espresso : milk (foam included)"}, roast:5, grind:{tr:"Espresso, ince",en:"Espresso, fine"}, temp:"92–94°C", time:{tr:"25–30 sn",en:"25–30 sec"}, tool:{tr:"Espresso Makinesi (ya da Moka Pot)",en:"Espresso Machine (or Moka Pot)"}, origin:{tr:"Küba ya da koyu kavrulmuş Orta Amerika blend — yoğun, düşük asiditeli yapı şekerle çırpılan köpüğün (espumita) kalıcı olmasını sağlar.", en:"Cuba or a dark-roast Central American blend — the intense, low-acid character keeps the sugar-whipped foam (espumita) stable."}},
+        {id:"cafe-au-lait", name:{tr:"Fransız Café au Lait",en:"French Café au Lait"}, note:{tr:"Filtre kahve + sıcak süt, eşit oran, kâsede",en:"Filter coffee + hot milk, equal parts, in a bowl"}, dose:"15g", doseHint:{tr:"standart filtre kahve dozu",en:"standard filter coffee dose"}, vessel:"bowl", layers:[["coffee",150],["milk",150]], ratio:"1:1", ratioLabel:{tr:"kahve : süt",en:"coffee : milk"}, roast:3, grind:{tr:"Orta (filtre kahve gibi)",en:"Medium (like filter coffee)"}, temp:"92–96°C", time:{tr:"4 dk",en:"4 min"}, tool:{tr:"Filtre Kahve Ekipmanı + Süt Tenceresi",en:"Filter Coffee Equipment + Milk Pot"}, origin:{tr:"Orta Amerika ya da Afrika kökenli orta kavrulmuş filtre kahvesi — eşit miktarda sütle karıştığında ekşimeden dengeli bir tat verir.", en:"Medium-roast filter coffee from Central America or Africa — stays balanced rather than sour when mixed with an equal amount of milk."}},
+        {id:"bosnian", name:{tr:"Bosna Kahvesi",en:"Bosnian Coffee"}, note:{tr:"Džezvede, Türk kahvesine benzer ama biraz daha kalın öğütülmüş",en:"In a džezva, similar to Turkish coffee but a bit more coarsely ground"}, dose:"7g", doseHint:{tr:"1 dolu kahve kaşığı",en:"1 heaped coffee spoon"}, vessel:"cezve", layers:[["water",65]], ratio:"1:9", ratioLabel:{tr:"kahve : su",en:"coffee : water"}, roast:4, grind:{tr:"Toz (Türk kahvesinden biraz daha kalın)",en:"Powder (slightly coarser than Turkish coffee)"}, temp:{tr:"Kısık ateş",en:"Low heat"}, time:{tr:"4–5 dk",en:"4–5 min"}, tool:{tr:"Cezve / Džezva",en:"Cezve / Džezva Pot"}, servingCup:{tr:"Fildžan (Bosna Kahve Fincanı, ~60–70 ml)",en:"Fildžan (Bosnian Coffee Cup, ~60–70 ml)"}, origin:{tr:"Brezilya ya da Orta Amerika kökenli — Türk kahvesine yakın ama biraz daha kalın öğütülmüş çekirdek, kaynatılmadan yavaşça ısıtılan yönteme daha iyi uyum sağlar.", en:"Brazil or Central America origin — beans ground a bit coarser than for Turkish coffee suit the slow-heated, never-boiled method better."}}
       ]
     }
   ];
@@ -698,142 +776,241 @@
   }
 
   function computeTips(cat, d){
-    var tips = [GENERAL_TIP].concat(cat.tips || []);
+    var tips = [t(GENERAL_TIP)].concat((cat.tips||[]).map(t));
     var hasMilk = d.layers.some(function(l){ return l[0]==="milk" || l[0]==="foam"; });
-    if(hasMilk) tips = tips.concat([MILK_TIP]);
-    if(d.tips) tips = tips.concat(d.tips);
+    if(hasMilk) tips = tips.concat([t(MILK_TIP)]);
+    if(d.tips) tips = tips.concat(d.tips.map(t));
     return tips;
   }
 
-  /* ---------- step-by-step brew guides (shared vocabulary per method) ---------- */
+  /* ---------- step-by-step brew guides (bilingual, shared vocabulary per method) ---------- */
   function stepsEspresso(d){
+    var en = LANG === "en";
     var steps = [];
-    steps.push({role:"Hazırlık", text:d.dose+" kahveyi "+d.grind+" öğütün, portafiltreye doldurup sıkıştırın (tamp)."});
-    steps.push({role:"Çekme", text:d.temp+"'de "+d.time+" boyunca espressoyu çekin (çıkış: "+layerMl(d,"espresso")+" ml)."});
+    steps.push({role: en?"Prep":"Hazırlık", text: en
+      ? "Grind "+d.dose+" of coffee to "+t(d.grind)+", load the portafilter, and tamp."
+      : d.dose+" kahveyi "+t(d.grind)+" öğütün, portafiltreye doldurup sıkıştırın (tamp)."
+    });
+    var espMl = layerMl(d,"espresso");
+    steps.push({role: en?"Pull":"Çekme", text: en
+      ? "Pull the espresso at "+d.temp+" for "+t(d.time)+" (yield: "+espMl+" ml)."
+      : d.temp+"'de "+t(d.time)+" boyunca espressoyu çekin (çıkış: "+espMl+" ml)."
+    });
     var waterMl = layerMl(d,"water");
     var milkMl = layerMl(d,"milk") + layerMl(d,"foam");
     if(waterMl > 0){
-      steps.push({role: d.iced ? "Buz" : "Su", text:(d.iced ? "Buz dolu bardağa " : "Üzerine ")+waterMl+" ml "+(d.iced ? "soğuk" : "sıcak")+" su ekleyin."});
+      steps.push({role: d.iced ? (en?"Ice":"Buz") : (en?"Water":"Su"), text: en
+        ? (d.iced ? "Add "+waterMl+" ml cold water to the ice-filled glass." : "Add "+waterMl+" ml hot water on top.")
+        : (d.iced ? "Buz dolu bardağa "+waterMl+" ml soğuk su ekleyin." : "Üzerine "+waterMl+" ml sıcak su ekleyin.")
+      });
     } else if(milkMl > 0){
       if(d.iced){
-        steps.push({role:"Süt", text:"Soğuk sütü hazırlayın; buzla erken karışmaması için kenardan yavaşça dökeceksiniz."});
+        steps.push({role: en?"Milk":"Süt", text: en
+          ? "Prepare the cold milk; you'll pour it slowly down the side so it doesn't mix with the ice too soon."
+          : "Soğuk sütü hazırlayın; buzla erken karışmaması için kenardan yavaşça dökeceksiniz."
+        });
       } else {
-        steps.push({role:"Süt", text:"Sütü buharla 55–65°C arasında ısıtıp mikroköpük elde edin ("+milkMl+" ml)."});
+        steps.push({role: en?"Milk":"Süt", text: en
+          ? "Steam the milk to 55–65°C to get microfoam ("+milkMl+" ml)."
+          : "Sütü buharla 55–65°C arasında ısıtıp mikroköpük elde edin ("+milkMl+" ml)."
+        });
       }
     }
-    steps.push({role:"Servis", text:ASSEMBLE[d.name] || "Servis edin."});
+    steps.push({role: en?"Serve":"Servis", text: t(ASSEMBLE[d.id]) || (en?"Serve.":"Servis edin.")});
     return steps;
   }
   function stepsColdBrew(d){
-    return [
+    var en = LANG === "en";
+    return en ? [
+      {role:"Prep", text:"Coarsely grind "+d.dose+" of coffee."},
+      {role:"Steep", text:"Stir into 1000ml cold water and let steep at room temperature or in the fridge for "+t(d.time)+"."},
+      {role:"Strain", text:"Strain the grounds out through a fine filter."},
+      {role:"Serve", text:"Dilute 1 part concentrate with 1 part water or milk and serve over plenty of ice."}
+    ] : [
       {role:"Hazırlık", text:d.dose+" kahveyi kalın çekin."},
-      {role:"Bekletme", text:"1000ml soğuk suyla karıştırıp oda sıcaklığında ya da buzdolabında "+d.time+" bekletin."},
+      {role:"Bekletme", text:"1000ml soğuk suyla karıştırıp oda sıcaklığında ya da buzdolabında "+t(d.time)+" bekletin."},
       {role:"Süzme", text:"Kahve telvesini ince bir filtreden geçirip ayırın."},
       {role:"Servis", text:"1 ölçek konsantreyi 1 ölçek su ya da sütle seyreltip bol buzla servis edin."}
     ];
   }
   function stepsPourover(d){
-    return [
-      {role:"Hazırlık", text:d.dose+" kahveyi "+d.grind+" öğütüp filtreye koyun, filtreyi sıcak suyla durulayın."},
+    var en = LANG === "en";
+    var waterMl = layerMl(d,"water");
+    return en ? [
+      {role:"Prep", text:"Grind "+d.dose+" of coffee to "+t(d.grind)+", place it in the filter, and rinse the filter with hot water."},
+      {role:"Bloom", text:"Wet the grounds with about twice their weight in water and let bloom for 30–45 seconds."},
+      {role:"Brew", text:"Pour the remaining water (total "+waterMl+" ml) slowly in circular motions, finishing within "+t(d.time)+"."},
+      {role:"Serve", text:"Remove the filter and serve hot."}
+    ] : [
+      {role:"Hazırlık", text:d.dose+" kahveyi "+t(d.grind)+" öğütüp filtreye koyun, filtreyi sıcak suyla durulayın."},
       {role:"Islatma", text:"Kahvenin yaklaşık 2 katı suyla ıslatıp 30–45 saniye (bloom) bekleyin."},
-      {role:"Demleme", text:"Kalan suyu (toplam "+layerMl(d,"water")+" ml) dairesel hareketlerle yavaşça dökün, "+d.time+" içinde tamamlayın."},
+      {role:"Demleme", text:"Kalan suyu (toplam "+waterMl+" ml) dairesel hareketlerle yavaşça dökün, "+t(d.time)+" içinde tamamlayın."},
       {role:"Servis", text:"Filtreyi çıkarıp sıcak servis edin."}
     ];
   }
   function stepsImmersion(d){
-    return [
-      {role:"Hazırlık", text:d.dose+" kahveyi "+d.grind+" öğütüp hazneye koyun."},
-      {role:"Demleme", text:d.temp+" suyu ("+layerMl(d,"water")+" ml) ekleyip kapağı kapatın, 4 dakika bekletin."},
+    var en = LANG === "en";
+    var waterMl = layerMl(d,"water");
+    return en ? [
+      {role:"Prep", text:"Grind "+d.dose+" of coffee to "+t(d.grind)+" and add it to the chamber."},
+      {role:"Brew", text:"Add "+d.temp+" water ("+waterMl+" ml), put the lid on, and let steep for 4 minutes."},
+      {role:"Press", text:"Press the plunger down slowly and evenly, all the way."},
+      {role:"Serve", text:"Pour immediately; prolonged contact with the grounds causes bitterness."}
+    ] : [
+      {role:"Hazırlık", text:d.dose+" kahveyi "+t(d.grind)+" öğütüp hazneye koyun."},
+      {role:"Demleme", text:d.temp+" suyu ("+waterMl+" ml) ekleyip kapağı kapatın, 4 dakika bekletin."},
       {role:"Bastırma", text:"Pistonu yavaş ve düz bir hareketle sonuna kadar bastırın."},
       {role:"Servis", text:"Hemen dökün; telveyle uzun temas acılık yaratır."}
     ];
   }
   function stepsAeropress(d){
-    return [
-      {role:"Hazırlık", text:d.dose+" kahveyi "+d.grind+" öğütüp filtreyi durulayıp hazneye takın."},
-      {role:"Demleme", text:d.temp+" suyu ("+layerMl(d,"water")+" ml) ekleyip karıştırın, 1–2 dakika bekletin."},
+    var en = LANG === "en";
+    var waterMl = layerMl(d,"water");
+    return en ? [
+      {role:"Prep", text:"Grind "+d.dose+" of coffee to "+t(d.grind)+", rinse the filter, and fit it into the cap."},
+      {role:"Brew", text:"Add "+d.temp+" water ("+waterMl+" ml), stir, and let sit for 1–2 minutes."},
+      {role:"Press", text:"Press the plunger down slowly over 20–30 seconds, all the way."},
+      {role:"Serve", text:"Dilute with hot water if desired, and serve."}
+    ] : [
+      {role:"Hazırlık", text:d.dose+" kahveyi "+t(d.grind)+" öğütüp filtreyi durulayıp hazneye takın."},
+      {role:"Demleme", text:d.temp+" suyu ("+waterMl+" ml) ekleyip karıştırın, 1–2 dakika bekletin."},
       {role:"Presleme", text:"Pistonu 20–30 saniyede sonuna kadar yavaşça bastırın."},
       {role:"Servis", text:"İstenirse sıcak suyla seyreltip servis edin."}
     ];
   }
   function stepsMoka(d){
-    return [
-      {role:"Hazırlık", text:"Alt hazneyi valfe kadar suyla doldurun, "+d.dose+" kahveyi "+d.grind+" öğütüp sepete koyun (bastırmayın)."},
-      {role:"Pişirme", text:"Ocakta orta ateşte, kapağı kapalı pişirin; "+d.time+" içinde üst hazne dolar."},
+    var en = LANG === "en";
+    return en ? [
+      {role:"Prep", text:"Fill the bottom chamber with water up to the valve, grind "+d.dose+" of coffee to "+t(d.grind)+", and place it in the basket (don't tamp)."},
+      {role:"Brew", text:"Cook on the stovetop over medium heat with the lid closed; the top chamber fills within "+t(d.time)+"."},
+      {role:"Serve", text:"When you hear the gurgling sound, take it off the heat and serve right away."}
+    ] : [
+      {role:"Hazırlık", text:"Alt hazneyi valfe kadar suyla doldurun, "+d.dose+" kahveyi "+t(d.grind)+" öğütüp sepete koyun (bastırmayın)."},
+      {role:"Pişirme", text:"Ocakta orta ateşte, kapağı kapalı pişirin; "+t(d.time)+" içinde üst hazne dolar."},
       {role:"Servis", text:"Fokurdama sesini duyunca ocaktan alıp hemen servis edin."}
     ];
   }
   function stepsDrip(d){
-    return [
-      {role:"Hazırlık", text:d.dose+" kahveyi "+d.grind+" öğütüp filtreye koyun."},
-      {role:"Demleme", text:layerMl(d,"water")+" ml suyu hazneye doldurup makineyi çalıştırın, "+d.time+" içinde tamamlanır."},
+    var en = LANG === "en";
+    var waterMl = layerMl(d,"water");
+    return en ? [
+      {role:"Prep", text:"Grind "+d.dose+" of coffee to "+t(d.grind)+" and add it to the filter."},
+      {role:"Brew", text:"Fill the reservoir with "+waterMl+" ml water and start the machine; it takes "+t(d.time)+"."},
+      {role:"Serve", text:"Serve hot as soon as brewing finishes."}
+    ] : [
+      {role:"Hazırlık", text:d.dose+" kahveyi "+t(d.grind)+" öğütüp filtreye koyun."},
+      {role:"Demleme", text:waterMl+" ml suyu hazneye doldurup makineyi çalıştırın, "+t(d.time)+" içinde tamamlanır."},
       {role:"Servis", text:"Demleme biter bitmez sıcak servis edin."}
     ];
   }
   function stepsTurkish(d){
-    return [
-      {role:"Hazırlık", text:d.dose+" kahveyi ("+d.doseHint+") cezveye koyun, "+layerMl(d,"water")+" ml soğuk su ve istenirse şeker ekleyip karıştırın."},
-      {role:"Pişirme", text:"Kısık ateşte, karıştırmadan "+d.time+" pişirin."},
+    var en = LANG === "en";
+    var waterMl = layerMl(d,"water");
+    return en ? [
+      {role:"Prep", text:"Add "+d.dose+" of coffee ("+t(d.doseHint)+") to the cezve, along with "+waterMl+" ml cold water and sugar if desired, and stir."},
+      {role:"Cook", text:"Cook over low heat, without stirring, for "+t(d.time)+"."},
+      {role:"Foam", text:"When the foam starts to rise, remove it before it boils over and divide it among the cups; return the cezve to the heat and repeat 2–3 times."},
+      {role:"Serve", text:"Pour the rest into the cups and serve."}
+    ] : [
+      {role:"Hazırlık", text:d.dose+" kahveyi ("+t(d.doseHint)+") cezveye koyun, "+waterMl+" ml soğuk su ve istenirse şeker ekleyip karıştırın."},
+      {role:"Pişirme", text:"Kısık ateşte, karıştırmadan "+t(d.time)+" pişirin."},
       {role:"Köpük", text:"Köpük yükselmeye başlayınca taşırmadan alıp fincanlara paylaştırın; cezveyi ocağa geri koyup 2–3 kez tekrarlayın."},
       {role:"Servis", text:"Kalan kahveyi fincanlara boşaltıp servis edin."}
     ];
   }
   function stepsLongBlack(d){
-    return [
-      {role:"Hazırlık", text:d.dose+" kahveyi "+d.grind+" öğütün, portafiltreye doldurup sıkıştırın (tamp)."},
-      {role:"Su", text:"Önce bardağa "+layerMl(d,"water")+" ml sıcak su koyun."},
-      {role:"Çekme", text:d.temp+"'de "+d.time+" boyunca espressoyu doğrudan suyun üzerine çekin — crema korunur."},
+    var en = LANG === "en";
+    var waterMl = layerMl(d,"water");
+    return en ? [
+      {role:"Prep", text:"Grind "+d.dose+" of coffee to "+t(d.grind)+", load the portafilter, and tamp."},
+      {role:"Water", text:"First, add "+waterMl+" ml hot water to the cup."},
+      {role:"Pull", text:"Pull the espresso at "+d.temp+" for "+t(d.time)+", directly over the water — this preserves the crema."},
+      {role:"Serve", text:"Serve without stirring."}
+    ] : [
+      {role:"Hazırlık", text:d.dose+" kahveyi "+t(d.grind)+" öğütün, portafiltreye doldurup sıkıştırın (tamp)."},
+      {role:"Su", text:"Önce bardağa "+waterMl+" ml sıcak su koyun."},
+      {role:"Çekme", text:d.temp+"'de "+t(d.time)+" boyunca espressoyu doğrudan suyun üzerine çekin — crema korunur."},
       {role:"Servis", text:"Karıştırmadan servis edin."}
     ];
   }
   function stepsVietnam(d){
-    return [
-      {role:"Hazırlık", text:d.dose+" kahveyi ("+d.doseHint+") phin filtresine koyup hafifçe bastırın."},
+    var en = LANG === "en";
+    return en ? [
+      {role:"Prep", text:"Add "+d.dose+" of coffee ("+t(d.doseHint)+") to the phin filter and press down lightly."},
+      {role:"Wet", text:"Wet the grounds with a little hot water, wait 30 seconds, then fill the phin and close the lid."},
+      {role:"Drip", text:"Let the coffee drip onto the condensed milk at the bottom of the glass for "+t(d.time)+"."},
+      {role:"Serve", text:"Stir and pour over ice; add more ice if desired."}
+    ] : [
+      {role:"Hazırlık", text:d.dose+" kahveyi ("+t(d.doseHint)+") phin filtresine koyup hafifçe bastırın."},
       {role:"Islatma", text:"Az miktarda sıcak suyla ıslatıp 30 saniye bekleyin, sonra phin'i doldurup kapağını kapatın."},
-      {role:"Damlatma", text:"Kahvenin bardağın dibindeki koyulaştırılmış süte "+d.time+" boyunca damlamasını bekleyin."},
+      {role:"Damlatma", text:"Kahvenin bardağın dibindeki koyulaştırılmış süte "+t(d.time)+" boyunca damlamasını bekleyin."},
       {role:"Servis", text:"Karıştırıp buz dolu bardağa dökün, isteğe göre daha fazla buzla servis edin."}
     ];
   }
   function stepsFrappe(d){
-    return [
-      {role:"Hazırlık", text:d.dose+" ("+d.doseHint+") kahveyi, biraz şeker ve azıcık soğuk suyla shaker'a koyun."},
-      {role:"Çırpma", text:"Sert şekilde çırpıp/sallayıp ("+d.time+") yoğun, kalıcı bir köpük oluşturun."},
+    var en = LANG === "en";
+    return en ? [
+      {role:"Prep", text:"Put "+d.dose+" ("+t(d.doseHint)+") of coffee, a little sugar, and a splash of cold water into a shaker."},
+      {role:"Whisk", text:"Shake or whisk vigorously ("+t(d.time)+") to build a thick, lasting foam."},
+      {role:"Serve", text:"Pour over ice, top with cold water (or milk), and serve."}
+    ] : [
+      {role:"Hazırlık", text:d.dose+" ("+t(d.doseHint)+") kahveyi, biraz şeker ve azıcık soğuk suyla shaker'a koyun."},
+      {role:"Çırpma", text:"Sert şekilde çırpıp/sallayıp ("+t(d.time)+") yoğun, kalıcı bir köpük oluşturun."},
       {role:"Servis", text:"Buz dolu bardağa dökün, üzerine soğuk su (ya da süt) ekleyip servis edin."}
     ];
   }
   function stepsCortadito(d){
-    return [
-      {role:"Hazırlık", text:d.dose+" kahveyi "+d.grind+" öğütün; bir tatlı kaşığı şekeri küçük bir kaba ayırın."},
+    var en = LANG === "en";
+    return en ? [
+      {role:"Prep", text:"Grind "+d.dose+" of coffee to "+t(d.grind)+"; set aside a teaspoon of sugar in a small cup."},
+      {role:"Pull", text:"Pull the espresso, then quickly whip the first drops with the sugar into a thick, creamy foam (espumita)."},
+      {role:"Mix", text:"Gently stir the rest of the espresso into the foam, then add a splash of milk."},
+      {role:"Serve", text:"Serve hot in a small cup."}
+    ] : [
+      {role:"Hazırlık", text:d.dose+" kahveyi "+t(d.grind)+" öğütün; bir tatlı kaşığı şekeri küçük bir kaba ayırın."},
       {role:"Çekme", text:"Espressoyu çekin, ilk damlaları şekerle hızlıca çırpıp koyu, kremamsı bir köpük (espumita) oluşturun."},
       {role:"Karıştırma", text:"Kalan espressoyu köpüğe yavaşça karıştırın, üzerine azıcık süt ekleyin."},
       {role:"Servis", text:"Küçük fincanda sıcak servis edin."}
     ];
   }
   function stepsCafeAuLait(d){
-    return [
-      {role:"Hazırlık", text:d.dose+" kahveyi "+d.grind+" öğütün ("+d.doseHint+")."},
-      {role:"Demleme", text:"Filtre kahveyi standart oranda demleyin, "+d.time+" sürer."},
+    var en = LANG === "en";
+    return en ? [
+      {role:"Prep", text:"Grind "+d.dose+" of coffee to "+t(d.grind)+" ("+t(d.doseHint)+")."},
+      {role:"Brew", text:"Brew the filter coffee at the standard ratio; it takes "+t(d.time)+"."},
+      {role:"Milk", text:"Heat an equal amount of milk until hot, without frothing it."},
+      {role:"Serve", text:"Pour the filter coffee and hot milk into a wide bowl at the same time, in equal amounts."}
+    ] : [
+      {role:"Hazırlık", text:d.dose+" kahveyi "+t(d.grind)+" öğütün ("+t(d.doseHint)+")."},
+      {role:"Demleme", text:"Filtre kahveyi standart oranda demleyin, "+t(d.time)+" sürer."},
       {role:"Süt", text:"Eşit miktarda sütü ısıtıp köpürtmeden sıcak hale getirin."},
       {role:"Servis", text:"Filtre kahve ve sıcak sütü aynı anda, eşit miktarda geniş bir kâseye dökün."}
     ];
   }
   function stepsBosnian(d){
-    return [
-      {role:"Hazırlık", text:d.dose+" kahveyi ("+d.doseHint+") džezveye koyun, "+layerMl(d,"water")+" ml soğuk su ekleyin."},
+    var en = LANG === "en";
+    var waterMl = layerMl(d,"water");
+    return en ? [
+      {role:"Prep", text:"Add "+d.dose+" of coffee ("+t(d.doseHint)+") to the džezva along with "+waterMl+" ml cold water."},
+      {role:"Cook", text:"Heat over low heat without stirring; when it starts to boil, remove the foam and divide it among the cups."},
+      {role:"Brew", text:"Heat the rest briefly again and pour into the cups; let it settle for 2–3 minutes."},
+      {role:"Serve", text:"Serve with a sugar cube and lokum on the side, without mixing the sugar into the coffee."}
+    ] : [
+      {role:"Hazırlık", text:d.dose+" kahveyi ("+t(d.doseHint)+") džezveye koyun, "+waterMl+" ml soğuk su ekleyin."},
       {role:"Pişirme", text:"Kısık ateşte, karıştırmadan ısıtın; su kaynamaya başlayınca köpüğü alıp fincanlara paylaştırın."},
       {role:"Demleme", text:"Kalanı kısa süre daha ısıtıp fincanlara boşaltın, 2–3 dakika dibe çökmesini bekleyin."},
       {role:"Servis", text:"Yanında bir küp şeker ve lokumla, şekeri kahveye katmadan servis edin."}
     ];
   }
   function buildSteps(cat, d){
-    if(d.name === "Long Black") return stepsLongBlack(d);
+    if(d.id === "long-black") return stepsLongBlack(d);
     if(cat.id === "geleneksel") return stepsTurkish(d);
     if(cat.id === "dunya"){
-      if(d.name === "Vietnam Kahvesi") return stepsVietnam(d);
-      if(d.name === "Yunan Frappe") return stepsFrappe(d);
-      if(d.name === "Küba Kahvesi (Cortadito)") return stepsCortadito(d);
-      if(d.name === "Fransız Café au Lait") return stepsCafeAuLait(d);
-      if(d.name === "Bosna Kahvesi") return stepsBosnian(d);
+      if(d.id === "vietnamese") return stepsVietnam(d);
+      if(d.id === "greek-frappe") return stepsFrappe(d);
+      if(d.id === "cortadito") return stepsCortadito(d);
+      if(d.id === "cafe-au-lait") return stepsCafeAuLait(d);
+      if(d.id === "bosnian") return stepsBosnian(d);
     }
     if(cat.id === "filtre"){
       if(d.vessel === "v60" || d.vessel === "chemex") return stepsPourover(d);
@@ -842,7 +1019,7 @@
       if(d.vessel === "mokapot") return stepsMoka(d);
       if(d.vessel === "drip") return stepsDrip(d);
     }
-    if(d.name === "Cold Brew") return stepsColdBrew(d);
+    if(d.id === "cold-brew") return stepsColdBrew(d);
     return stepsEspresso(d);
   }
 
@@ -853,63 +1030,65 @@
       var item = el("div","legend-item");
       var dot = el("span","legend-dot"); dot.style.background = "var(--l-"+key+")";
       item.appendChild(dot);
-      item.appendChild(document.createTextNode(LAYER_LABELS[key]));
+      item.appendChild(document.createTextNode(t(LAYER_LABELS[key])));
       host.appendChild(item);
     });
 
     var roastKey = el("div","roast-key");
-    var title = el("span","roast-key-title","Kavrulma Ölçeği — çekirdeğin ne kadar koyu kavrulduğu");
+    var title = el("span","roast-key-title", t(UI.roastScaleTitle));
     roastKey.appendChild(title);
     var items = el("div","items");
     for(var i=1;i<=5;i++){
       items.appendChild(el("span","item",
         '<span class="dot" style="background:'+ROAST_COLORS[i]+'"></span>'+
-        '<span class="name">'+ROAST_LABELS[i]+'</span>'+
-        '<span class="cue">'+ROAST_CUES[i]+'</span>'
+        '<span class="name">'+t(ROAST_LABELS[i])+'</span>'+
+        '<span class="cue">'+t(ROAST_CUES[i])+'</span>'
       ));
     }
     roastKey.appendChild(items);
     host.appendChild(roastKey);
 
-    var note = el("div","legend-note","Her kart kendi türüne uygun bardak/ekipman çiziminde katman katman sunulur. Oranların ne anlama geldiği (ör. kahve:su ya da espresso:süt) her kartta ve detay sayfasında açıkça yazılıdır. Detaylı hazırlama adımları, çekirdek önerisi ve ipuçları için bir karta tıkla.");
+    var note = el("div","legend-note", t(UI.legendNote));
     host.appendChild(note);
   }
 
   function ingredientRows(d){
     var rows = [];
-    rows.push(["Kahve", d.dose+(d.doseHint ? " · "+d.doseHint : "")]);
+    rows.push([t(UI.kahve), d.dose+(d.doseHint ? " · "+t(d.doseHint) : "")]);
     d.layers.forEach(function(l){
+      if(l[1] <= 0) return;
       rows.push([
-        '<span class="dot" style="background:var(--l-'+l[0]+')"></span>'+LAYER_LABELS[l[0]],
+        '<span class="dot" style="background:var(--l-'+l[0]+')"></span>'+t(LAYER_LABELS[l[0]]),
         l[1]+' ml'
       ]);
     });
-    if(d.layers.length > 1){
-      var total = d.layers.reduce(function(s,l){return s+l[1];},0);
-      rows.push(["Toplam", '<span class="accent">'+total+' ml</span>']);
+    var visLayers = d.layers.filter(function(l){ return l[1] > 0; });
+    if(visLayers.length > 1){
+      var total = visLayers.reduce(function(s,l){return s+l[1];},0);
+      rows.push([t(UI.toplam), '<span class="accent">'+total+' ml</span>']);
     }
     if(d.ratio && d.ratio !== "—"){
-      rows.push(["Oran", '<span class="accent">'+d.ratio+'</span> <span class="faint">('+d.ratioLabel+')</span>']);
+      rows.push([t(UI.oran), '<span class="accent">'+d.ratio+'</span> <span class="faint">('+t(d.ratioLabel)+')</span>']);
     }
     return rows;
   }
 
   function prepRows(d){
     var cap = vesselCapacity(d.vessel);
-    var kapText = d.servingCup || (VESSEL_NAMES[d.vessel]+(cap ? " · ~"+cap+" ml" : ""));
+    var kapText = d.servingCup ? t(d.servingCup) : (t(VESSEL_NAMES[d.vessel])+(cap ? " · ~"+cap+" ml" : ""));
     return [
-      ["Pişirme Aracı", d.tool],
-      ["Kavrulma", roastDots(d.roast)+" "+ROAST_LABELS[d.roast]+' · <span class="faint">'+ROAST_CUES[d.roast]+"</span>"],
-      ["Öğütüm", d.grind],
-      ["Sıcaklık", d.temp],
-      ["Süre", d.time],
-      ["Kap", kapText]
+      [t(UI.pisirmeAraci), t(d.tool)],
+      [t(UI.kavrulma), roastDots(d.roast)+" "+t(ROAST_LABELS[d.roast])+' · <span class="faint">'+t(ROAST_CUES[d.roast])+"</span>"],
+      [t(UI.ogutum), t(d.grind)],
+      [t(UI.sicaklik), d.temp],
+      [t(UI.sure), t(d.time)],
+      [t(UI.kap), kapText]
     ];
   }
 
   function ingredientsSpecsHTML(d){
     var html = '<div class="specs specs-malz">';
-    html += '<div class="specs-label">Malzemeler</div>';
+    html += '<div class="specs-label">'+t(UI.malzemeler)+'</div>';
     ingredientRows(d).forEach(function(r){
       html += '<span class="k">'+r[0]+'</span><span class="v">'+r[1]+'</span>';
     });
@@ -928,11 +1107,11 @@
 
   function infoGridHTML(d){
     var html = '<div class="specs">';
-    html += '<div class="specs-label">Malzemeler</div>';
+    html += '<div class="specs-label">'+t(UI.malzemeler)+'</div>';
     ingredientRows(d).forEach(function(r){
       html += '<span class="k">'+r[0]+'</span><span class="v">'+r[1]+'</span>';
     });
-    html += '<div class="specs-label">Detaylar</div>';
+    html += '<div class="specs-label">'+t(UI.detaylar)+'</div>';
     prepRows(d).forEach(function(r){
       html += '<span class="k">'+r[0]+'</span><span class="v">'+r[1]+'</span>';
     });
@@ -944,12 +1123,12 @@
     var steps = buildSteps(cat, d);
     var stepsHTML = steps.map(function(s){ return "<li><b>"+s.role+":</b> "+s.text+"</li>"; }).join("");
     var tips = computeTips(cat, d);
-    var tipsHTML = tips.map(function(t){ return "<li>"+t+"</li>"; }).join("");
-    var origin = d.origin || cat.origin || "";
+    var tipsHTML = tips.map(function(tp){ return "<li>"+tp+"</li>"; }).join("");
+    var origin = d.origin ? t(d.origin) : (cat.origin ? t(cat.origin) : "");
     var html = '<div class="print-only">';
-    html += '<h5>Nasıl Yapılır</h5><ol>'+stepsHTML+'</ol>';
-    html += '<h5>İpuçları &amp; Gereklilikler</h5><ul>'+tipsHTML+'</ul>';
-    if(origin){ html += '<h5>Çekirdek Menşei Önerisi</h5><p>'+origin+'</p>'; }
+    html += '<h5>'+t(UI.nasilYapilir)+'</h5><ol>'+stepsHTML+'</ol>';
+    html += '<h5>'+t(UI.ipuclari)+'</h5><ul>'+tipsHTML+'</ul>';
+    if(origin){ html += '<h5>'+t(UI.mensei)+'</h5><p>'+origin+'</p>'; }
     html += '</div>';
     return html;
   }
@@ -960,16 +1139,16 @@
     card.setAttribute("tabindex","0");
     card.setAttribute("role","button");
     card.setAttribute("aria-haspopup","dialog");
-    card.setAttribute("aria-label", d.name+" — detayları gör");
+    card.setAttribute("aria-label", t(d.name)+t(UI.detailsFor));
 
     var top = el("div","card-top");
     var nameWrap = el("div");
-    nameWrap.appendChild(el("span","card-name",d.name));
-    nameWrap.appendChild(el("span","card-note",d.note));
+    nameWrap.appendChild(el("span","card-name", t(d.name)));
+    nameWrap.appendChild(el("span","card-note", t(d.note)));
     top.appendChild(nameWrap);
     if(d.iced){
       var badgeWrap = el("div");
-      badgeWrap.appendChild(el("span","badge iced","Buzlu"));
+      badgeWrap.appendChild(el("span","badge iced", t(UI.buzlu)));
       top.appendChild(badgeWrap);
     }
     card.appendChild(top);
@@ -978,9 +1157,12 @@
     card.appendChild(stage);
 
     card.appendChild(el("div", null, ingredientsSpecsHTML(d)).firstElementChild);
-    card.appendChild(el("div","specs-label","Detaylar"));
+    card.appendChild(el("div","specs-label", t(UI.detaylar)));
     card.appendChild(el("div", null, prepSpecsHTML(d)).firstElementChild);
-    card.appendChild(el("div","card-hint",'<span class="phase-preview">Hazırlık<span class="sep">›</span>Demleme<span class="sep">›</span>Sunum</span><span class="hint-text">Adımlar için tıkla ↗</span>'));
+    card.appendChild(el("div","card-hint",
+      '<span class="phase-preview">'+t(UI.hazirlik)+'<span class="sep">›</span>'+t(UI.demleme)+'<span class="sep">›</span>'+t(UI.sunum)+'</span>'+
+      '<span class="hint-text">'+t(UI.adimlarTikla)+'</span>'
+    ));
     card.appendChild(el("div", null, printDetailHTML(cat, d)).firstElementChild);
 
     function open(){ openModal(cat, d); }
@@ -996,10 +1178,10 @@
   var modal, modalBody, lastTrigger;
 
   function renderModalContent(cat, d){
-    var badges = d.iced ? '<span class="badge iced">Buzlu</span>' : "";
-    var origin = d.origin || cat.origin || "";
+    var badges = d.iced ? '<span class="badge iced">'+t(UI.buzlu)+'</span>' : "";
+    var origin = d.origin ? t(d.origin) : (cat.origin ? t(cat.origin) : "");
     var tips = computeTips(cat, d);
-    var tipsHTML = tips.map(function(t){ return "<li>"+t+"</li>"; }).join("");
+    var tipsHTML = tips.map(function(tp){ return "<li>"+tp+"</li>"; }).join("");
     var steps = buildSteps(cat, d);
     var prepStep = steps[0];
     var serveStep = steps[steps.length - 1];
@@ -1008,9 +1190,9 @@
       ? "<ol>"+midSteps.map(function(s){ return "<li><b>"+s.role+"</b> — "+s.text+"</li>"; }).join("")+"</ol>"
       : "<p><b>"+midSteps[0].role+"</b> — "+midSteps[0].text+"</p>";
     var stepsHTML =
-      '<div class="step-phase"><span class="step-phase-name">Hazırlık</span><p>'+prepStep.text+'</p></div>'+
-      '<div class="step-phase"><span class="step-phase-name">Demleme</span>'+midHTML+'</div>'+
-      '<div class="step-phase"><span class="step-phase-name">Sunum</span><p>'+serveStep.text+'</p></div>';
+      '<div class="step-phase"><span class="step-phase-name">'+t(UI.hazirlik)+'</span><p>'+prepStep.text+'</p></div>'+
+      '<div class="step-phase"><span class="step-phase-name">'+t(UI.demleme)+'</span>'+midHTML+'</div>'+
+      '<div class="step-phase"><span class="step-phase-name">'+t(UI.sunum)+'</span><p>'+serveStep.text+'</p></div>';
 
     var html = "";
     html += '<div class="modal-visual">';
@@ -1018,14 +1200,14 @@
     html += '</div>';
 
     html += '<div class="modal-info">';
-    html += '<p class="eyebrow" style="color:var(--cat-accent)">'+cat.title+'</p>';
-    html += '<h3 id="modal-name-heading" class="card-name">'+d.name+'</h3>';
-    html += '<p class="card-note">'+d.note+'</p>';
+    html += '<p class="eyebrow" style="color:var(--cat-accent)">'+t(cat.title)+'</p>';
+    html += '<h3 id="modal-name-heading" class="card-name">'+t(d.name)+'</h3>';
+    html += '<p class="card-note">'+t(d.note)+'</p>';
     if(badges){ html += '<div class="modal-badges">'+badges+'</div>'; }
     html += infoGridHTML(d);
-    html += '<div class="modal-section"><h4>Nasıl Yapılır</h4>'+stepsHTML+'</div>';
-    html += '<div class="modal-section"><h4>İpuçları &amp; Gereklilikler</h4><ul>'+tipsHTML+'</ul></div>';
-    if(origin){ html += '<div class="modal-section"><h4>Çekirdek Menşei Önerisi</h4><p>'+origin+'</p></div>'; }
+    html += '<div class="modal-section"><h4>'+t(UI.nasilYapilir)+'</h4>'+stepsHTML+'</div>';
+    html += '<div class="modal-section"><h4>'+t(UI.ipuclari)+'</h4><ul>'+tipsHTML+'</ul></div>';
+    if(origin){ html += '<div class="modal-section"><h4>'+t(UI.mensei)+'</h4><p>'+origin+'</p></div>'; }
     html += '</div>';
     return html;
   }
@@ -1040,9 +1222,30 @@
     modal.close();
   }
 
-  function render(){
-    buildLegendRow();
+  function applyStaticI18n(){
+    document.documentElement.lang = LANG;
+    document.title = t(UI.title);
+    var nodes = document.querySelectorAll("[data-i18n]");
+    for(var i=0;i<nodes.length;i++){
+      var key = nodes[i].getAttribute("data-i18n");
+      if(UI[key]) nodes[i].textContent = t(UI[key]);
+    }
+    var closeBtn = document.getElementById("modal-close-btn");
+    if(closeBtn) closeBtn.setAttribute("aria-label", t(UI.close));
+    var buttons = document.querySelectorAll(".lang-switch button");
+    for(var j=0;j<buttons.length;j++){
+      var b = buttons[j];
+      if(b.getAttribute("data-lang") === LANG){ b.classList.add("active"); }
+      else { b.classList.remove("active"); }
+    }
+  }
+
+  function buildContent(){
+    var legend = document.getElementById("legend");
     var content = document.getElementById("content");
+    legend.innerHTML = "";
+    content.innerHTML = "";
+    buildLegendRow();
     CATEGORIES.forEach(function(cat){
       var section = el("section","category");
       section.id = cat.id;
@@ -1050,9 +1253,9 @@
 
       var head = el("div","cat-head");
       head.appendChild(el("span","cat-num",cat.num));
-      head.appendChild(el("h2",null,cat.title));
+      head.appendChild(el("h2",null, t(cat.title)));
       section.appendChild(head);
-      section.appendChild(el("p","cat-sub",cat.sub));
+      section.appendChild(el("p","cat-sub", t(cat.sub)));
 
       var grid = el("div","grid");
       cat.drinks.forEach(function(d){
@@ -1061,12 +1264,35 @@
       section.appendChild(grid);
       content.appendChild(section);
     });
+  }
+
+  function setLang(l){
+    if(l !== "tr" && l !== "en") return;
+    LANG = l;
+    try{ localStorage.setItem("kahveLangPref", l); }catch(e){}
+    applyStaticI18n();
+    buildContent();
+  }
+
+  function render(){
+    var saved = null;
+    try{ saved = localStorage.getItem("kahveLangPref"); }catch(e){}
+    if(saved === "tr" || saved === "en") LANG = saved;
+
+    applyStaticI18n();
+    buildContent();
 
     modal = document.getElementById("detail-modal");
     modalBody = document.getElementById("modal-body");
     modal.querySelector("[data-close]").addEventListener("click", closeModal);
     modal.addEventListener("click", function(e){ if(e.target === modal){ closeModal(); } });
     modal.addEventListener("close", function(){ if(lastTrigger && lastTrigger.focus){ lastTrigger.focus(); } });
+
+    var switchEl = document.getElementById("lang-switch");
+    var langButtons = switchEl.querySelectorAll("button");
+    for(var i=0;i<langButtons.length;i++){
+      langButtons[i].addEventListener("click", function(){ setLang(this.getAttribute("data-lang")); });
+    }
   }
 
   render();
