@@ -83,12 +83,7 @@
   .brand .mark{width:1.5em; height:1.5em; border-radius:50%; background:conic-gradient(from 210deg, var(--l-coldbrew), var(--accent) 40%, var(--l-milk) 70%, var(--l-coldbrew)); box-shadow:inset 0 0 0 1px var(--line-strong);}
   .navlinks{display:flex; gap:.35rem; flex-wrap:wrap;}
   @media (max-width:640px){
-    .navlinks{
-      order:3; flex:1 1 100%; min-width:0; flex-wrap:nowrap; overflow-x:auto; -webkit-overflow-scrolling:touch;
-      scrollbar-width:none; -ms-overflow-style:none; margin:0 -1px; padding:0 1px .1rem;
-    }
-    .navlinks::-webkit-scrollbar{display:none;}
-    .navlinks a{flex:none;}
+    .navlinks{order:3; flex:1 1 100%; justify-content:flex-start;}
   }
   .navlinks a{
     font-family:var(--font-mono); font-size:.78rem; letter-spacing:.06em; text-transform:uppercase;
