@@ -88,10 +88,10 @@
   }
   .navlinks a:hover, .navlinks a:focus-visible{ color:var(--text); border-color:var(--line-strong); background:var(--surface); outline:none;}
   .navlinks a:focus-visible{ box-shadow:0 0 0 2px var(--accent); }
-  .lang-switch{display:flex; border:1px solid var(--line); border-radius:999px; padding:2px; flex:none; background:var(--surface);}
+  .lang-switch{display:flex; gap:2px; border:1px solid var(--line-strong); border-radius:999px; padding:3px; flex:none; background:var(--surface);}
   .lang-switch button{
-    font-family:var(--font-mono); font-size:.7rem; letter-spacing:.05em; font-weight:600;
-    padding:.32rem .6rem; border-radius:999px; border:none; background:none; color:var(--text-faint);
+    font-family:var(--font-mono); font-size:.84rem; letter-spacing:.05em; font-weight:700;
+    padding:.55rem 1rem; border-radius:999px; border:none; background:none; color:var(--text-dim);
     cursor:pointer; transition:background .15s, color .15s;
   }
   .lang-switch button.active{background:var(--accent); color:#fffaf2;}
@@ -291,8 +291,8 @@
       <a href="#espresso" data-i18n="navEspresso">Espresso Bazlı</a>
       <a href="#soguk" data-i18n="navCold">Soğuk Kahveler</a>
       <a href="#filtre" data-i18n="navFilter">Filtre &amp; Manuel</a>
-      <a href="#geleneksel" data-i18n="navTrad">Geleneksel</a>
-      <a href="#dunya" data-i18n="navWorld">Dünyadan Kahveler</a>
+      <a href="#cezve" data-i18n="navCezve">Cezve Usulü</a>
+      <a href="#yoresel" data-i18n="navYoresel">Yöresel Kahve Kültürleri</a>
     </nav>
     <div class="lang-switch" role="group" aria-label="Dil / Language" id="lang-switch">
       <button type="button" data-lang="tr">TR</button>
@@ -347,8 +347,8 @@
     navEspresso:{tr:"Espresso Bazlı", en:"Espresso-Based"},
     navCold:{tr:"Soğuk Kahveler", en:"Cold Coffees"},
     navFilter:{tr:"Filtre & Manuel", en:"Filter & Manual"},
-    navTrad:{tr:"Geleneksel", en:"Traditional"},
-    navWorld:{tr:"Dünyadan Kahveler", en:"Coffees of the World"},
+    navCezve:{tr:"Cezve Usulü", en:"Cezve-Brewed"},
+    navYoresel:{tr:"Yöresel Kahve Kültürleri", en:"Regional Coffee Cultures"},
     roastScaleTitle:{tr:"Kavrulma Ölçeği — çekirdeğin ne kadar koyu kavrulduğu", en:"Roast Scale — how dark the beans are roasted"},
     legendNote:{tr:"Her kart kendi türüne uygun bardak/ekipman çiziminde katman katman sunulur. Oranların ne anlama geldiği (ör. kahve:su ya da espresso:süt) her kartta ve detay sayfasında açıkça yazılıdır. Detaylı hazırlama adımları, çekirdek önerisi ve ipuçları için bir karta tıkla.",
       en:"Each card shows its composition layer by layer, in its own appropriate cup or brewing equipment. What each ratio means (e.g. coffee:water or espresso:milk) is spelled out on every card and in the detail view. Tap a card for full brewing steps, bean recommendations, and tips."},
@@ -725,31 +725,31 @@
       ]
     },
     {
-      id:"geleneksel", accent:"--accent-trad", num:"04",
-      title:{tr:"Geleneksel", en:"Traditional"},
-      sub:{tr:"Kum ya da ocakta, cezve içinde köpüklü pişirilen yöntem.", en:"Brewed with foam in a small pot, over sand or a stovetop flame."},
+      id:"cezve", accent:"--accent-trad", num:"04",
+      title:{tr:"Cezve Usulü", en:"Cezve-Brewed"},
+      sub:{tr:"Kum ya da ocakta, cezve/džezva içinde köpüklü pişirilen, aynı köke dayanan geleneksel yöntem.", en:"Brewed with foam in a cezve/džezva, over sand or a stovetop flame — a shared traditional method."},
       tips:[
         {tr:"Öğütüm mutlaka pudra kıvamında olmalı — kalın öğütümde köpük tutmaz.", en:"The grind must be powder-fine — a coarser grind won't hold the foam."},
         {tr:"Soğuk ve yumuşak (az kireçli) su kullanmak daha kalıcı bir köpük verir.", en:"Cold, soft (low-mineral) water gives a longer-lasting foam."}
       ],
       drinks:[
-        {id:"turkish-coffee", name:{tr:"Türk Kahvesi",en:"Turkish Coffee"}, note:{tr:"Cezvede, kısık ateşte, köpüklü",en:"In a cezve, over low heat, with foam"}, dose:"7g", doseHint:{tr:"1 dolu kahve kaşığı",en:"1 heaped coffee spoon"}, vessel:"cezve", layers:[["water",65]], ratio:"1:9", ratioLabel:{tr:"kahve : su",en:"coffee : water"}, roast:4, origin:{tr:"Brezilya (düşük asidite) ya da Yemen Harar stili (yoğun, şaraba yakın meyvemsi karakter) — pudra inceliğindeki öğütümde yoğunlaşan tada iyi eşlik eder.", en:"Brazil (low acidity) or Yemen Harar-style (intense, wine-like fruity character) — both complement the concentrated flavor that comes from the powder-fine grind."}, grind:{tr:"Toz (çok ince)",en:"Powder (very fine)"}, temp:{tr:"Kısık ateş",en:"Low heat"}, time:{tr:"4–5 dk",en:"4–5 min"}, tool:{tr:"Cezve / İbrik",en:"Cezve / Ibrik Pot"}, servingCup:{tr:"Türk Kahve Fincanı (~60–70 ml)",en:"Turkish Coffee Cup (~60–70 ml)"}}
+        {id:"turkish-coffee", name:{tr:"Türk Kahvesi",en:"Turkish Coffee"}, note:{tr:"Cezvede, kısık ateşte, köpüklü",en:"In a cezve, over low heat, with foam"}, dose:"7g", doseHint:{tr:"1 dolu kahve kaşığı",en:"1 heaped coffee spoon"}, vessel:"cezve", layers:[["water",65]], ratio:"1:9", ratioLabel:{tr:"kahve : su",en:"coffee : water"}, roast:4, origin:{tr:"Brezilya (düşük asidite) ya da Yemen Harar stili (yoğun, şaraba yakın meyvemsi karakter) — pudra inceliğindeki öğütümde yoğunlaşan tada iyi eşlik eder.", en:"Brazil (low acidity) or Yemen Harar-style (intense, wine-like fruity character) — both complement the concentrated flavor that comes from the powder-fine grind."}, grind:{tr:"Toz (çok ince)",en:"Powder (very fine)"}, temp:{tr:"Kısık ateş",en:"Low heat"}, time:{tr:"4–5 dk",en:"4–5 min"}, tool:{tr:"Cezve / İbrik",en:"Cezve / Ibrik Pot"}, servingCup:{tr:"Türk Kahve Fincanı (~60–70 ml)",en:"Turkish Coffee Cup (~60–70 ml)"}},
+        {id:"bosnian", name:{tr:"Bosna Kahvesi",en:"Bosnian Coffee"}, note:{tr:"Džezvede, Türk kahvesine benzer ama biraz daha kalın öğütülmüş",en:"In a džezva, similar to Turkish coffee but a bit more coarsely ground"}, dose:"7g", doseHint:{tr:"1 dolu kahve kaşığı",en:"1 heaped coffee spoon"}, vessel:"cezve", layers:[["water",65]], ratio:"1:9", ratioLabel:{tr:"kahve : su",en:"coffee : water"}, roast:4, grind:{tr:"Toz (Türk kahvesinden biraz daha kalın)",en:"Powder (slightly coarser than Turkish coffee)"}, temp:{tr:"Kısık ateş",en:"Low heat"}, time:{tr:"4–5 dk",en:"4–5 min"}, tool:{tr:"Cezve / Džezva",en:"Cezve / Džezva Pot"}, servingCup:{tr:"Fildžan (Bosna Kahve Fincanı, ~60–70 ml)",en:"Fildžan (Bosnian Coffee Cup, ~60–70 ml)"}, origin:{tr:"Brezilya ya da Orta Amerika kökenli — Türk kahvesine yakın ama biraz daha kalın öğütülmüş çekirdek, kaynatılmadan yavaşça ısıtılan yönteme daha iyi uyum sağlar.", en:"Brazil or Central America origin — beans ground a bit coarser than for Turkish coffee suit the slow-heated, never-boiled method better."}}
       ]
     },
     {
-      id:"dunya", accent:"--accent-world", num:"05",
-      title:{tr:"Dünyadan Kahveler", en:"Coffees of the World"},
-      sub:{tr:"Kendi ülkesine özgü ekipman ya da tekniği olan, dünya çapında tanınan yerel kahve kültürleri.", en:"Globally recognized local coffee cultures, each with its own country-specific equipment or technique."},
+      id:"yoresel", accent:"--accent-world", num:"05",
+      title:{tr:"Yöresel Kahve Kültürleri", en:"Regional Coffee Cultures"},
+      sub:{tr:"Kendi ülkesine özgü ekipman, ritüel ya da tekniğiyle öne çıkan yöresel kahve gelenekleri.", en:"Regional coffee traditions defined by their own country-specific equipment, ritual, or technique."},
       tips:[
         {tr:"Her ülkenin kendi damak zevkine göre şeker/tatlandırma oranı farklıdır; tarifler başlangıç noktasıdır.", en:"Sugar and sweetness levels vary by local taste in every country; these recipes are a starting point."},
-        {tr:"Yerel ekipman (phin, džezva, shaker) bulunamıyorsa en yakın alternatif kullanılabilir, sonuç küçük farklılıklar gösterebilir.", en:"If local equipment (phin, džezva, shaker) isn't available, the closest substitute works — expect small differences in the result."}
+        {tr:"Yerel ekipman (phin, shaker) bulunamıyorsa en yakın alternatif kullanılabilir, sonuç küçük farklılıklar gösterebilir.", en:"If local equipment (phin, shaker) isn't available, the closest substitute works — expect small differences in the result."}
       ],
       drinks:[
         {id:"vietnamese", name:{tr:"Vietnam Kahvesi",en:"Vietnamese Coffee"}, note:{tr:"Phin filtresi + koyulaştırılmış süt, buzlu",en:"Phin filter + condensed milk, iced"}, dose:"20g", doseHint:{tr:"yaklaşık 3–4 tatlı kaşığı",en:"about 3–4 teaspoons"}, vessel:"tallGlassIce", layers:[["condensedmilk",45],["coffee",135]], ratio:"3:1", ratioLabel:{tr:"kahve : koyulaştırılmış süt",en:"coffee : condensed milk"}, roast:5, iced:true, grind:{tr:"Orta-kalın (phin için)",en:"Medium-coarse (for the phin)"}, temp:"90–96°C", time:{tr:"4–5 dk",en:"4–5 min"}, tool:{tr:"Phin Filtresi + Bardak",en:"Phin Filter + Glass"}, origin:{tr:"Vietnam Robusta (ya da Robusta-Arabica blend) — güçlü, sert ve çikolatamsı yapısı koyulaştırılmış sütün yoğun tatlılığını dengeler.", en:"Vietnamese Robusta (or a Robusta-Arabica blend) — its strong, bold, chocolatey character balances the intense sweetness of the condensed milk."}},
         {id:"greek-frappe", name:{tr:"Yunan Frappe",en:"Greek Frappé"}, note:{tr:"Çırpılmış hazır kahve köpüğü, buzlu",en:"Whipped instant coffee foam, iced"}, dose:"10g", doseHint:{tr:"2 tatlı kaşığı hazır (instant) kahve",en:"2 teaspoons instant coffee"}, vessel:"tallGlassIce", layers:[["coffee",90],["foam",90]], ratio:"1:1", ratioLabel:{tr:"kahve köpüğü : su",en:"coffee foam : water"}, roast:5, iced:true, grind:{tr:"Öğütüm gerekmez (hazır/granül kahve)",en:"No grinding needed (instant/granulated coffee)"}, temp:{tr:"Soğuk (buzlu su ile çırpılır)",en:"Cold (whipped with cold water)"}, time:{tr:"1–2 dk çırpma",en:"1–2 min whisking"}, tool:{tr:"Shaker / Kapaklı Kavanoz",en:"Shaker / Lidded Jar"}, origin:{tr:"Yunanistan/Kıbrıs'ta yaygın koyu kavrulmuş hazır (instant) kahve — çırpıldığında yoğun ve kalıcı bir köpük verir.", en:"Dark-roasted instant coffee common in Greece/Cyprus — whips up into a thick, long-lasting foam."}},
         {id:"cortadito", name:{tr:"Küba Kahvesi (Cortadito)",en:"Cuban Coffee (Cortadito)"}, note:{tr:"Şekerle çırpılmış köpüklü espresso",en:"Espresso whipped with sugar into foam"}, dose:"18g", vessel:"demitasse", layers:[["espresso",30],["milk",10],["foam",10]], ratio:"3:2", ratioLabel:{tr:"espresso : süt (köpük dahil)",en:"espresso : milk (foam included)"}, roast:5, grind:{tr:"Espresso, ince",en:"Espresso, fine"}, temp:"92–94°C", time:{tr:"25–30 sn",en:"25–30 sec"}, tool:{tr:"Espresso Makinesi (ya da Moka Pot)",en:"Espresso Machine (or Moka Pot)"}, origin:{tr:"Küba ya da koyu kavrulmuş Orta Amerika blend — yoğun, düşük asiditeli yapı şekerle çırpılan köpüğün (espumita) kalıcı olmasını sağlar.", en:"Cuba or a dark-roast Central American blend — the intense, low-acid character keeps the sugar-whipped foam (espumita) stable."}},
-        {id:"cafe-au-lait", name:{tr:"Fransız Café au Lait",en:"French Café au Lait"}, note:{tr:"Filtre kahve + sıcak süt, eşit oran, kâsede",en:"Filter coffee + hot milk, equal parts, in a bowl"}, dose:"15g", doseHint:{tr:"standart filtre kahve dozu",en:"standard filter coffee dose"}, vessel:"bowl", layers:[["coffee",150],["milk",150]], ratio:"1:1", ratioLabel:{tr:"kahve : süt",en:"coffee : milk"}, roast:3, grind:{tr:"Orta (filtre kahve gibi)",en:"Medium (like filter coffee)"}, temp:"92–96°C", time:{tr:"4 dk",en:"4 min"}, tool:{tr:"Filtre Kahve Ekipmanı + Süt Tenceresi",en:"Filter Coffee Equipment + Milk Pot"}, origin:{tr:"Orta Amerika ya da Afrika kökenli orta kavrulmuş filtre kahvesi — eşit miktarda sütle karıştığında ekşimeden dengeli bir tat verir.", en:"Medium-roast filter coffee from Central America or Africa — stays balanced rather than sour when mixed with an equal amount of milk."}},
-        {id:"bosnian", name:{tr:"Bosna Kahvesi",en:"Bosnian Coffee"}, note:{tr:"Džezvede, Türk kahvesine benzer ama biraz daha kalın öğütülmüş",en:"In a džezva, similar to Turkish coffee but a bit more coarsely ground"}, dose:"7g", doseHint:{tr:"1 dolu kahve kaşığı",en:"1 heaped coffee spoon"}, vessel:"cezve", layers:[["water",65]], ratio:"1:9", ratioLabel:{tr:"kahve : su",en:"coffee : water"}, roast:4, grind:{tr:"Toz (Türk kahvesinden biraz daha kalın)",en:"Powder (slightly coarser than Turkish coffee)"}, temp:{tr:"Kısık ateş",en:"Low heat"}, time:{tr:"4–5 dk",en:"4–5 min"}, tool:{tr:"Cezve / Džezva",en:"Cezve / Džezva Pot"}, servingCup:{tr:"Fildžan (Bosna Kahve Fincanı, ~60–70 ml)",en:"Fildžan (Bosnian Coffee Cup, ~60–70 ml)"}, origin:{tr:"Brezilya ya da Orta Amerika kökenli — Türk kahvesine yakın ama biraz daha kalın öğütülmüş çekirdek, kaynatılmadan yavaşça ısıtılan yönteme daha iyi uyum sağlar.", en:"Brazil or Central America origin — beans ground a bit coarser than for Turkish coffee suit the slow-heated, never-boiled method better."}}
+        {id:"cafe-au-lait", name:{tr:"Fransız Café au Lait",en:"French Café au Lait"}, note:{tr:"Filtre kahve + sıcak süt, eşit oran, kâsede",en:"Filter coffee + hot milk, equal parts, in a bowl"}, dose:"15g", doseHint:{tr:"standart filtre kahve dozu",en:"standard filter coffee dose"}, vessel:"bowl", layers:[["coffee",150],["milk",150]], ratio:"1:1", ratioLabel:{tr:"kahve : süt",en:"coffee : milk"}, roast:3, grind:{tr:"Orta (filtre kahve gibi)",en:"Medium (like filter coffee)"}, temp:"92–96°C", time:{tr:"4 dk",en:"4 min"}, tool:{tr:"Filtre Kahve Ekipmanı + Süt Tenceresi",en:"Filter Coffee Equipment + Milk Pot"}, origin:{tr:"Orta Amerika ya da Afrika kökenli orta kavrulmuş filtre kahvesi — eşit miktarda sütle karıştığında ekşimeden dengeli bir tat verir.", en:"Medium-roast filter coffee from Central America or Africa — stays balanced rather than sour when mixed with an equal amount of milk."}}
       ]
     }
   ];
@@ -1004,14 +1004,12 @@
   }
   function buildSteps(cat, d){
     if(d.id === "long-black") return stepsLongBlack(d);
-    if(cat.id === "geleneksel") return stepsTurkish(d);
-    if(cat.id === "dunya"){
-      if(d.id === "vietnamese") return stepsVietnam(d);
-      if(d.id === "greek-frappe") return stepsFrappe(d);
-      if(d.id === "cortadito") return stepsCortadito(d);
-      if(d.id === "cafe-au-lait") return stepsCafeAuLait(d);
-      if(d.id === "bosnian") return stepsBosnian(d);
-    }
+    if(d.id === "turkish-coffee") return stepsTurkish(d);
+    if(d.id === "bosnian") return stepsBosnian(d);
+    if(d.id === "vietnamese") return stepsVietnam(d);
+    if(d.id === "greek-frappe") return stepsFrappe(d);
+    if(d.id === "cortadito") return stepsCortadito(d);
+    if(d.id === "cafe-au-lait") return stepsCafeAuLait(d);
     if(cat.id === "filtre"){
       if(d.vessel === "v60" || d.vessel === "chemex") return stepsPourover(d);
       if(d.vessel === "frenchpress") return stepsImmersion(d);
