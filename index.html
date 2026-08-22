@@ -1,0 +1,1074 @@
+<title>Kahve Atlası</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,340;0,9..144,480;0,9..144,600;1,9..144,480;1,9..144,600&family=Karla:ital,wght@0,400;0,500;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+
+<style>
+  :root{
+    --bg:#f3e6d1;
+    --surface:#fffaf2;
+    --surface-2:#f1e2c5;
+    --line: rgba(74,47,23,.14);
+    --line-strong: rgba(74,47,23,.30);
+    --text:#3a2414;
+    --text-dim:#6d4c33;
+    --text-faint:#93765a;
+    --vessel-line:#4a2f1c;
+
+    --accent:#b06a1f;      /* espresso bazlı — karamel */
+    --accent-cold:#2f7a70; /* soğuk kahveler — koyu turkuaz */
+    --accent-filter:#71802c; /* filtre & manuel — zeytin */
+    --accent-trad:#a13d1c;  /* geleneksel — bakır */
+    --accent-world:#3f5f8a; /* dünyadan kahveler — indigo */
+
+    --l-espresso:#4a2a1a;
+    --l-coffee:#6b3a22;
+    --l-condmilk:#e3bd7e;
+    --l-water:#7fa3ad;
+    --l-milk:#ecd9b0;
+    --l-foam:#faf4e6;
+    --l-choc:#5c2a1a;
+    --l-cream:#f6ecd0;
+    --l-icecream:#f3dfa0;
+    --l-coldbrew:#8a4a1f;
+
+    --mat-ceramic:#fff6e8;
+    --mat-glass: rgba(226,238,236,.55);
+    --mat-metal:#e6ddc8;
+    --mat-copper:#e2c9a0;
+
+    --r1:#dcb98a; --r2:#c99f6a; --r3:#a97a48; --r4:#7f5330; --r5:#4a2f1c;
+
+    --radius:16px;
+    --font-display:'Fraunces', 'Iowan Old Style', ui-serif, Georgia, serif;
+    --font-body:'Karla', -apple-system, 'Segoe UI', sans-serif;
+    --font-mono:'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  @media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto;} *{animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important;} }
+
+  body{
+    margin:0;
+    background:
+      radial-gradient(60vw 40vh at 15% -10%, rgba(176,106,31,.14), transparent 60%),
+      radial-gradient(50vw 35vh at 100% 0%, rgba(47,122,112,.10), transparent 55%),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0.29  0 0 0 0 0.18  0 0 0 0 0.08  0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E"),
+      var(--bg);
+    color:var(--text);
+    font-family:var(--font-body);
+    font-size:17.5px;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  a{color:inherit;}
+  ::selection{background:var(--accent); color:#fffaf2;}
+
+  h1,h2,h3{font-family:var(--font-display); text-wrap:balance; margin:0;}
+
+  .wrap{max-width:1220px; margin:0 auto; padding:0 clamp(1rem,3vw,2.5rem);}
+
+  /* ---------- top nav ---------- */
+  .topnav{
+    position:sticky; top:0; z-index:40;
+    -webkit-backdrop-filter:blur(14px) saturate(140%);
+    backdrop-filter:blur(14px) saturate(140%);
+    background:rgba(255,250,240,.82);
+    border-bottom:1px solid var(--line);
+  }
+  .topnav .wrap{display:flex; align-items:center; justify-content:space-between; gap:1rem; padding-top:.7rem; padding-bottom:.7rem;}
+  .brand{display:flex; align-items:center; gap:.55rem; font-family:var(--font-display); font-weight:600; font-size:1.05rem; letter-spacing:.01em;}
+  .brand .mark{width:1.5em; height:1.5em; border-radius:50%; background:conic-gradient(from 210deg, var(--l-coldbrew), var(--accent) 40%, var(--l-milk) 70%, var(--l-coldbrew)); box-shadow:inset 0 0 0 1px var(--line-strong);}
+  .navlinks{display:flex; gap:.35rem; flex-wrap:wrap;}
+  .navlinks a{
+    font-family:var(--font-mono); font-size:.78rem; letter-spacing:.06em; text-transform:uppercase;
+    padding:.45rem .7rem; border-radius:999px; border:1px solid var(--line); color:var(--text-dim);
+    text-decoration:none; white-space:nowrap; transition:border-color .15s, color .15s, background .15s;
+  }
+  .navlinks a:hover, .navlinks a:focus-visible{ color:var(--text); border-color:var(--line-strong); background:var(--surface); outline:none;}
+  .navlinks a:focus-visible{ box-shadow:0 0 0 2px var(--accent); }
+
+  /* ---------- hero ---------- */
+  .hero{padding:clamp(2.2rem,5vw,4rem) 0 clamp(1.6rem,3vw,2.2rem); position:relative; overflow:hidden;}
+  .steam{position:absolute; pointer-events:none; filter:blur(26px); opacity:.5; border-radius:50%; background:radial-gradient(circle, rgba(176,106,31,.28), transparent 70%);}
+  .steam.s1{width:220px; height:320px; top:-140px; right:8%; animation:drift1 14s ease-in-out infinite;}
+  .steam.s2{width:160px; height:260px; top:-100px; right:22%; background:radial-gradient(circle, rgba(47,122,112,.22), transparent 70%); animation:drift2 11s ease-in-out infinite;}
+  @keyframes drift1{0%,100%{transform:translateY(0) translateX(0); opacity:.4;} 50%{transform:translateY(30px) translateX(-14px); opacity:.6;}}
+  @keyframes drift2{0%,100%{transform:translateY(10px) translateX(0); opacity:.3;} 50%{transform:translateY(-18px) translateX(10px); opacity:.5;}}
+
+  .eyebrow{font-family:var(--font-mono); font-size:.8rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent);}
+  .hero h1{font-size:clamp(2.5rem,6vw,4.4rem); font-weight:600; font-style:italic; margin-top:.5rem; max-width:14ch;}
+  .hero p.lede{font-size:clamp(1rem,1.6vw,1.15rem); color:var(--text-dim); max-width:56ch; margin-top:1rem;}
+
+  .legend-row{
+    margin-top:1.4rem; display:flex; flex-wrap:wrap; gap:.55rem 1.3rem; align-items:center;
+    padding:.85rem 1.1rem; border:1px solid var(--line); border-radius:var(--radius); background:var(--surface);
+    box-shadow:0 1px 2px rgba(58,36,21,.05), 0 10px 24px -18px rgba(58,36,21,.25);
+  }
+  .legend-item{display:flex; align-items:center; gap:.5rem; font-family:var(--font-mono); font-size:.84rem; color:var(--text-dim);}
+  .legend-dot{width:.78rem; height:.78rem; border-radius:3px; flex:none; box-shadow:inset 0 0 0 1px rgba(0,0,0,.15);}
+  .legend-note{font-family:var(--font-body); font-size:.92rem; color:var(--text-faint); font-style:italic; flex-basis:100%; padding-top:.3rem; border-top:1px dashed var(--line); margin-top:.1rem;}
+
+  .roast-key{flex-basis:100%; border-top:1px dashed var(--line); margin-top:.15rem; padding-top:.5rem;}
+  .roast-key-title{display:block; font-family:var(--font-mono); font-size:.76rem; text-transform:uppercase; letter-spacing:.08em; color:var(--text-faint); margin-bottom:.4rem;}
+  .roast-key .items{display:flex; flex-wrap:wrap;}
+  .roast-key .item{flex:1 1 116px; min-width:116px; text-align:center; padding:0 .55rem;}
+  .roast-key .item + .item{border-left:1px dashed var(--line);}
+  .roast-key .dot{display:block; width:12px; height:12px; border-radius:50%; margin:0 auto .4rem; box-shadow:inset 0 0 0 1px rgba(0,0,0,.15);}
+  .roast-key .name{display:block; font-family:var(--font-mono); font-size:.78rem; color:var(--text); text-transform:uppercase; letter-spacing:.02em;}
+  .roast-key .cue{display:block; font-size:.82rem; color:var(--text-faint); font-style:italic; margin-top:.15rem;}
+
+  /* ---------- sections ---------- */
+  section.category{padding:clamp(1.8rem,3.4vw,2.6rem) 0; scroll-margin-top:5rem;}
+  section.category + section.category{border-top:1px solid var(--line);}
+  .cat-head{display:flex; align-items:baseline; gap:.9rem; flex-wrap:wrap; margin-bottom:1.1rem;}
+  .cat-num{font-family:var(--font-mono); font-size:.86rem; color:var(--cat-accent); letter-spacing:.08em;}
+  .cat-head h2{font-size:clamp(1.5rem,3vw,2.1rem); font-style:italic; font-weight:500;}
+  .cat-sub{font-size:1.02rem; color:var(--text-dim); margin-top:.3rem; max-width:62ch;}
+
+  .grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:1rem;}
+  @media (max-width:380px){ .grid{grid-template-columns:1fr;} }
+
+  /* ---------- card ---------- */
+  .card{
+    position:relative;
+    background:linear-gradient(165deg, #fffdf9 0%, var(--surface) 55%);
+    border:1px solid var(--line); border-radius:var(--radius);
+    padding:1rem 1.05rem .9rem;
+    display:grid; grid-template-rows:subgrid; grid-row:span 6; row-gap:.5rem;
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,.6),
+      0 1px 2px rgba(58,36,21,.05),
+      0 14px 30px -20px rgba(58,36,21,.3);
+    transition:border-color .18s, transform .18s, box-shadow .18s;
+    cursor:pointer;
+  }
+  .card:hover{
+    border-color:var(--line-strong); transform:translateY(-3px);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,.7),
+      0 6px 14px rgba(58,36,21,.1),
+      0 22px 40px -18px rgba(58,36,21,.35);
+    z-index:30;
+  }
+  .card:focus-visible{outline:none; border-color:var(--cat-accent); box-shadow:inset 0 1px 0 rgba(255,255,255,.6), 0 0 0 3px color-mix(in srgb, var(--cat-accent) 35%, transparent), 0 14px 30px -20px rgba(58,36,21,.3); z-index:30;}
+  .card-top{display:flex; justify-content:space-between; align-items:flex-start; gap:.6rem;}
+  .card-name{font-family:var(--font-display); font-size:1.36rem; font-weight:600;}
+  .card-note{display:block; font-size:.88rem; font-style:italic; color:var(--text-dim); margin-top:.15rem;}
+  .badge{
+    font-family:var(--font-mono); font-size:.7rem; letter-spacing:.07em; text-transform:uppercase;
+    padding:.28rem .55rem; border-radius:999px; border:1px solid; white-space:nowrap; flex:none;
+  }
+  .badge.iced{color:var(--accent-cold); border-color:var(--accent-cold); background:linear-gradient(165deg, color-mix(in srgb, var(--accent-cold) 12%, transparent), transparent);}
+
+  /* ---------- vessel (main focus) ---------- */
+  .vessel-stage{
+    display:flex; justify-content:center; align-items:flex-end;
+    background:radial-gradient(60% 55% at 50% 88%, rgba(74,47,23,.08), transparent 72%);
+    border-radius:12px; padding:.15rem .25rem 0; margin-bottom:-.15rem;
+  }
+  .vessel-svg{width:100%; max-width:206px; height:auto; display:block;}
+
+  .specs{
+    display:grid; grid-template-columns:6.5rem 1fr; column-gap:.75rem; row-gap:.34rem;
+    font-family:var(--font-mono); font-size:.79rem; align-items:baseline;
+    color:var(--text); border-top:1px solid var(--line); padding-top:.55rem;
+  }
+  .specs.specs-prep{border-top:none; padding-top:0;}
+  .specs .k{color:var(--text-faint); font-weight:500; text-transform:uppercase; letter-spacing:.05em; font-size:.66rem; line-height:1.3;}
+  .specs .v{color:var(--text); text-align:left; line-height:1.4;}
+  .specs .dot{display:inline-block; width:.55rem; height:.55rem; border-radius:2px; margin-right:.42rem; flex:none; box-shadow:inset 0 0 0 1px rgba(0,0,0,.12);}
+  .specs .accent{color:var(--cat-accent); font-weight:600;}
+  .specs .faint{color:var(--text-faint); font-weight:400; font-size:.94em;}
+  .specs .dots{display:inline-flex; gap:3px; vertical-align:middle; margin-right:.45rem;}
+  .specs .dots span{width:7px; height:7px; border-radius:50%; box-shadow:inset 0 0 0 1px rgba(0,0,0,.15); display:inline-block;}
+  .specs .dots span.active{box-shadow:0 0 0 2px var(--cat-accent), inset 0 0 0 1px rgba(0,0,0,.2); transform:scale(1.2);}
+  .specs-label{
+    grid-column:1 / -1; font-family:var(--font-mono); font-size:.68rem; text-transform:uppercase;
+    letter-spacing:.09em; color:var(--cat-accent); font-weight:600;
+    padding-top:.5rem; margin-top:.15rem; border-top:1px dashed var(--line);
+  }
+  .specs-label:first-child{padding-top:0; margin-top:0; border-top:none;}
+
+  .card-hint{display:flex; flex-direction:column; align-items:center; gap:.25rem; text-align:center; margin-top:-.1rem;}
+  .card-hint .phase-preview{font-family:var(--font-mono); font-size:.66rem; letter-spacing:.04em; text-transform:uppercase; color:var(--text-faint);}
+  .card-hint .phase-preview .sep{margin:0 .35rem; color:var(--line-strong); font-style:normal;}
+  .card-hint .hint-text{font-family:var(--font-mono); font-size:.72rem; letter-spacing:.06em; text-transform:uppercase; color:var(--text-faint); transition:color .15s;}
+  .card:hover .card-hint .hint-text, .card:focus-visible .card-hint .hint-text{color:var(--cat-accent);}
+
+  .print-only{display:none;}
+
+  /* ---------- detail modal ---------- */
+  dialog.detail-modal{
+    border:none; border-radius:20px; padding:0; max-width:760px; width:92vw;
+    background:var(--surface); color:var(--text);
+    box-shadow:0 30px 70px -24px rgba(58,36,21,.5);
+  }
+  dialog.detail-modal::backdrop{background:rgba(58,36,21,.4); -webkit-backdrop-filter:blur(3px); backdrop-filter:blur(3px);}
+  dialog.detail-modal[open]{animation:modalIn .2s ease-out;}
+  @keyframes modalIn{from{opacity:0; transform:translateY(10px) scale(.98);} to{opacity:1; transform:none;}}
+  .modal-close{
+    position:absolute; top:1rem; right:1rem; width:2.2rem; height:2.2rem; border-radius:50%;
+    border:1px solid var(--line); background:var(--surface); color:var(--text-dim);
+    font-size:1.3rem; line-height:1; cursor:pointer; display:flex; align-items:center; justify-content:center; z-index:2;
+  }
+  .modal-close:hover, .modal-close:focus-visible{background:var(--surface-2); color:var(--text); outline:none;}
+  .modal-close:focus-visible{box-shadow:0 0 0 2px var(--accent);}
+  .modal-body{display:grid; grid-template-columns:220px 1fr; gap:1.4rem; padding:1.7rem 1.7rem 1.6rem;}
+  @media (max-width:600px){ .modal-body{grid-template-columns:1fr;} }
+  .modal-visual{display:flex; flex-direction:column; gap:.6rem; align-items:center;}
+  .modal-visual .vessel-svg{max-width:230px;}
+  .modal-info h3{font-size:2.05rem; margin-top:.15rem;}
+  .modal-badges{display:flex; gap:.4rem; align-items:center; flex-wrap:wrap;}
+  .modal-section{margin-top:.8rem; padding-top:.75rem; border-top:1px dashed var(--line);}
+  .modal-section h4{font-family:var(--font-mono); font-size:.76rem; letter-spacing:.08em; text-transform:uppercase; color:var(--text-faint); margin:0 0 .5rem;}
+  .modal-section p{margin:0; font-size:1rem; color:var(--text-dim); line-height:1.6;}
+  .modal-section ul, .modal-section ol{margin:0; padding-left:1.2rem; display:flex; flex-direction:column; gap:.45rem;}
+  .modal-section li{font-size:.97rem; color:var(--text-dim); line-height:1.55;}
+  .modal-section ol li b{color:var(--cat-accent);}
+
+  .step-phase{margin-top:.75rem;}
+  .step-phase:first-child{margin-top:0;}
+  .step-phase-name{
+    display:block; font-family:var(--font-mono); font-size:.72rem; text-transform:uppercase;
+    letter-spacing:.09em; color:var(--cat-accent); font-weight:600; margin-bottom:.3rem;
+  }
+  .step-phase p{margin:0; font-size:.97rem; color:var(--text-dim); line-height:1.55;}
+  .step-phase p b{color:var(--cat-accent);}
+  .step-phase ol{margin:0; padding-left:1.2rem; display:flex; flex-direction:column; gap:.4rem;}
+  .step-phase ol li{font-size:.97rem; color:var(--text-dim); line-height:1.55;}
+
+  /* ---------- footer ---------- */
+  footer{padding:1.8rem 0 2.4rem; border-top:1px solid var(--line);}
+  footer .wrap{display:flex; flex-wrap:wrap; justify-content:space-between; gap:1rem; align-items:center;}
+  footer p{margin:0; font-size:.92rem; color:var(--text-faint); max-width:52ch;}
+  footer .mono{font-family:var(--font-mono); font-size:.78rem; letter-spacing:.05em; color:var(--text-faint); text-transform:uppercase;}
+
+  /* ---------- print ---------- */
+  @media print{
+    body{background:#fff; font-size:12px;}
+    .topnav{position:static; background:#fff; -webkit-backdrop-filter:none; backdrop-filter:none; border-bottom:1px solid #ccc;}
+    .navlinks{display:none;}
+    .steam{display:none;}
+    .legend-row{box-shadow:none; border:1px solid #ccc;}
+    .hero{padding-top:.5rem; padding-bottom:.5rem;}
+    section.category{padding:1rem 0; break-before:page;}
+    section.category:first-of-type{break-before:auto;}
+    .grid{display:block;}
+    .card{
+      display:block; grid-template-rows:none; grid-row:auto;
+      box-shadow:none; border:1px solid #ccc; break-inside:avoid; page-break-inside:avoid;
+      margin-bottom:.9rem; background:#fff;
+    }
+    .card:hover{transform:none;}
+    .card-hint{display:none;}
+    .vessel-stage{background:none;}
+    .print-only{display:block; margin-top:.6rem; padding-top:.6rem; border-top:1px dashed #ccc;}
+    .print-only h5{font-family:var(--font-mono); font-size:.72rem; text-transform:uppercase; letter-spacing:.06em; color:var(--text-dim); margin:.6rem 0 .3rem;}
+    .print-only h5:first-child{margin-top:0;}
+    .print-only ol, .print-only ul{margin:0; padding-left:1.1rem;}
+    .print-only li, .print-only p{font-size:.85rem; line-height:1.5; color:#222;}
+    dialog.detail-modal{display:none !important;}
+    a[href]{color:inherit; text-decoration:none;}
+  }
+</style>
+
+<div class="topnav">
+  <div class="wrap">
+    <div class="brand"><span class="mark"></span>Kahve Atlası</div>
+    <nav class="navlinks">
+      <a href="#espresso">Espresso Bazlı</a>
+      <a href="#soguk">Soğuk Kahveler</a>
+      <a href="#filtre">Filtre &amp; Manuel</a>
+      <a href="#geleneksel">Geleneksel</a>
+      <a href="#dunya">Dünyadan Kahveler</a>
+    </nav>
+  </div>
+</div>
+
+<header class="hero">
+  <div class="steam s1"></div>
+  <div class="steam s2"></div>
+  <div class="wrap">
+    <p class="eyebrow">Barista Referans Rehberi</p>
+    <h1>Fincandaki her oranın haritası</h1>
+    <p class="lede">Espresso'dan Türk kahvesine, kafelerde sipariş verdiğin her kahvenin doğru kahve–süt–su oranı, gramajı, ideal kavrulma derecesi ve kendi bardağıyla — tek bakışta. Detaylı hazırlama adımları için bir karta tıkla.</p>
+    <div class="legend-row" id="legend"></div>
+  </div>
+</header>
+
+<main class="wrap" id="content"></main>
+
+<footer>
+  <div class="wrap">
+    <p>Oranlar ve kavrulma önerileri yaygın barista standartlarına dayanır; çekirdek ve damak zevkine göre ince ayar yapılabilir.</p>
+    <span class="mono">g = kuru kahve · ml = sıvı hacim</span>
+  </div>
+</footer>
+
+<dialog class="detail-modal" id="detail-modal" aria-labelledby="modal-name-heading">
+  <button class="modal-close" data-close aria-label="Kapat">×</button>
+  <div class="modal-body" id="modal-body"></div>
+</dialog>
+
+<script>
+(function(){
+  "use strict";
+
+  var LAYER_LABELS = {
+    espresso:"Espresso", water:"Su", milk:"Süt", foam:"Köpük",
+    choc:"Çikolata Sosu", cream:"Krema", icecream:"Dondurma", coldbrew:"Cold Brew Konsantresi",
+    coffee:"Demlenmiş Kahve", condensedmilk:"Koyulaştırılmış Süt"
+  };
+  var ROAST_COLORS = {1:"var(--r1)",2:"var(--r2)",3:"var(--r3)",4:"var(--r4)",5:"var(--r5)"};
+  var ROAST_LABELS = {1:"Açık", 2:"Açık-Orta", 3:"Orta", 4:"Orta-Koyu", 5:"Koyu"};
+  var ROAST_CUES = {
+    1:"ekşimsi, meyveli",
+    2:"meyveli, hafif gövde",
+    3:"dengeli, karamelli",
+    4:"yoğun gövde, az ekşi",
+    5:"dumanlı, en yoğun"
+  };
+  var GENERAL_TIP = "Çekirdeği kavrulma tarihinden itibaren 2–4 hafta içinde tüketin; oda sıcaklığında, hava almayan bir kapta saklayın.";
+  var MILK_TIP = "Süt asla kaynatılmamalı — fazla ısınan süt tatlılığını kaybedip yanık bir tat bırakır.";
+
+  var ASSEMBLE = {
+    "Ristretto":"Fincana alıp hemen için.",
+    "Espresso (Solo)":"Fincana alıp hemen için.",
+    "Doppio":"Fincana alıp hemen için.",
+    "Lungo":"Fincana alıp hemen için.",
+    "Americano":"Karıştırmadan servis edin.",
+    "Cortado":"Espressonun üzerine sütü nazikçe dökün, servis edin.",
+    "Macchiato":"Espressonun üzerine bir kaşık köpük ekleyin.",
+    "Piccolo Latte":"Espressonun üzerine sütü ve köpüğü dökün.",
+    "Flat White":"Sütü, ince ve pürüzsüz bir köpük bırakacak şekilde nazikçe dökün.",
+    "Cappuccino":"Espresso, süt ve köpüğü eşit üç katman halinde dökün.",
+    "Latte":"Sütü yavaşça dökün, üzerinde ince bir köpük tabakası bırakın.",
+    "Mocha":"Bardağın dibine çikolata sosunu koyun, üzerine espresso ve sütü ekleyin.",
+    "Affogato":"Dondurmayı kaseye koyun, sıcak espressoyu son anda üzerine dökün.",
+    "Espresso Con Panna":"Üzerine çırpılmış krema ekleyip servis edin.",
+    "Viyana Kahvesi (Einspänner)":"Üzerine bol çırpılmış krema ekleyip karıştırmadan servis edin.",
+    "Iced Americano":"Karıştırmadan servis edin.",
+    "Iced Latte":"Buz dolu bardağa önce espressoyu, sonra soğuk sütü dökün."
+  };
+
+  var MATERIAL_KIND = {
+    demitasse:"ceramic", cappuccinoCup:"ceramic", mug:"ceramic",
+    smallGlass:"glass", tallGlass:"glass", tallGlassIce:"glass",
+    v60:"glass", chemex:"glass", frenchpress:"metal", aeropress:"metal", drip:"glass",
+    mokapot:"metal", cezve:"copper", bowl:"ceramic"
+  };
+  var MATERIAL_STOPS = {
+    ceramic:["#fffdf9","#fef2dd","#e9d8b6"],
+    glass:["#ffffff","#e7f1ee","#c9dcd7"],
+    metal:["#f6efdd","#ddd0ac","#b3a179"],
+    copper:["#f2ddb2","#dcae75","#b17f4c"]
+  };
+
+  /* ---------- vessel geometry ---------- */
+  function trapPath(b){
+    if(b.waistY !== undefined){
+      return "M "+b.topL+","+b.topY+
+        " L "+b.topR+","+b.topY+
+        " L "+b.waistR+","+b.waistY+
+        " L "+b.botR+","+(b.botY-6)+
+        " Q "+b.botR+","+b.botY+" "+(b.botR-6)+","+b.botY+
+        " L "+(b.botL+6)+","+b.botY+
+        " Q "+b.botL+","+b.botY+" "+b.botL+","+(b.botY-6)+
+        " L "+b.waistL+","+b.waistY+
+        " Z";
+    }
+    return "M "+b.topL+","+b.topY+
+      " L "+b.topR+","+b.topY+
+      " L "+b.botR+","+(b.botY-6)+
+      " Q "+b.botR+","+b.botY+" "+(b.botR-6)+","+b.botY+
+      " L "+(b.botL+6)+","+b.botY+
+      " Q "+b.botL+","+b.botY+" "+b.botL+","+(b.botY-6)+
+      " Z";
+  }
+  function wallPath(b){
+    return "M "+b.topL+","+b.topY+
+      " L "+b.botL+","+(b.botY-6)+
+      " Q "+b.botL+","+b.botY+" "+(b.botL+6)+","+b.botY+
+      " L "+(b.botR-6)+","+b.botY+
+      " Q "+b.botR+","+b.botY+" "+b.botR+","+(b.botY-6)+
+      " L "+b.topR+","+b.topY;
+  }
+  function body(topL,topR,topY,botL,botR,botY,waistL,waistR,waistY){
+    return {topL:topL,topR:topR,topY:topY,botL:botL,botR:botR,botY:botY,waistL:waistL,waistR:waistR,waistY:waistY};
+  }
+  function handlePath(x, topY, botY){
+    var mTop = topY + (botY-topY)*0.16, mBot = topY + (botY-topY)*0.8;
+    return "M "+x+","+mTop+" C "+(x+26)+","+(mTop-4)+" "+(x+26)+","+(mBot+8)+" "+x+","+mBot;
+  }
+  function widthAt(b, y){
+    var left, right, t;
+    if(b.waistY !== undefined && y <= b.waistY){
+      t = (y-b.topY)/(b.waistY-b.topY);
+      left = b.topL+(b.waistL-b.topL)*t; right = b.topR+(b.waistR-b.topR)*t;
+    } else if(b.waistY !== undefined){
+      t = (y-b.waistY)/(b.botY-b.waistY);
+      left = b.waistL+(b.botL-b.waistL)*t; right = b.waistR+(b.botR-b.waistR)*t;
+    } else {
+      t = Math.max(0, Math.min(1, (y-b.topY)/(b.botY-b.topY)));
+      left = b.topL+(b.botL-b.topL)*t; right = b.topR+(b.botR-b.topR)*t;
+    }
+    return {cx:(left+right)/2, rx:(right-left)/2};
+  }
+
+  function drawSaucer(s){
+    var out = '<ellipse cx="'+s.cx+'" cy="'+(s.cy+3)+'" rx="'+(s.rx+2)+'" ry="'+(s.ry+1)+'" fill="rgba(58,36,21,.14)"/>';
+    out += '<ellipse cx="'+s.cx+'" cy="'+s.cy+'" rx="'+s.rx+'" ry="'+s.ry+'" fill="var(--surface-2)" stroke="var(--line-strong)" stroke-width="1"/>';
+    var midRx = s.rx*0.78, midRy = s.ry*0.78;
+    out += '<ellipse cx="'+s.cx+'" cy="'+(s.cy-0.6)+'" rx="'+midRx.toFixed(1)+'" ry="'+midRy.toFixed(1)+'" fill="none" stroke="rgba(255,255,255,.55)" stroke-width="1" opacity=".7"/>';
+    var wellRx = s.rx*0.6, wellRy = s.ry*0.58;
+    out += '<ellipse cx="'+s.cx+'" cy="'+(s.cy+0.8)+'" rx="'+wellRx.toFixed(1)+'" ry="'+wellRy.toFixed(1)+'" fill="rgba(58,36,21,.08)"/>';
+    var ax1 = (s.cx-wellRx*0.85).toFixed(1), ax2 = (s.cx+wellRx*0.85).toFixed(1), ay = (s.cy+0.8-wellRy*0.4).toFixed(1);
+    out += '<path d="M '+ax1+','+ay+' A '+wellRx.toFixed(1)+' '+wellRy.toFixed(1)+' 0 0 1 '+ax2+','+ay+'" fill="none" stroke="rgba(58,36,21,.14)" stroke-width="1.3" opacity=".75"/>';
+    return out;
+  }
+
+  var CUPS = {
+    demitasse:{capacity:100, body:body(42,98,42,50,90,112), inner:{topY:50,botY:108}, handle:{x:98,topY:42,botY:112}, rim:{cx:70,cy:42,rx:28,ry:5}, saucer:{cx:70,cy:120,rx:46,ry:7}},
+    smallGlass:{capacity:150, body:body(50,90,46,54,86,122), inner:{topY:52,botY:118}, rim:{cx:70,cy:46,rx:20,ry:4.5}},
+    cappuccinoCup:{capacity:220, body:body(32,108,48,42,98,108), inner:{topY:54,botY:104}, handle:{x:108,topY:48,botY:108}, rim:{cx:70,cy:48,rx:38,ry:5.5}, saucer:{cx:70,cy:116,rx:52,ry:7}},
+    tallGlass:{capacity:320, body:body(54,86,28,50,90,128), inner:{topY:34,botY:124}, rim:{cx:70,cy:28,rx:16,ry:4}},
+    mug:{capacity:220, body:body(40,100,44,42,98,116), inner:{topY:50,botY:112}, handle:{x:100,topY:44,botY:116}, rim:{cx:70,cy:44,rx:30,ry:5}},
+    tallGlassIce:{capacity:380, body:body(52,88,24,48,92,130), inner:{topY:30,botY:126}, rim:{cx:70,cy:24,rx:18,ry:4}, ice:true},
+    bowl:{capacity:300, body:body(18,122,48,32,108,100), inner:{topY:56,botY:94}, rim:{cx:70,cy:48,rx:52,ry:7}}
+  };
+
+  function equip(kind){
+    switch(kind){
+      case "v60": return {
+        bodies:[body(20,120,22,60,80,62), body(46,94,68,52,88,128)],
+        handle:{x:94,topY:68,botY:128}, inner:{topY:74,botY:124}, capacity:300,
+        deco:'<line x1="44" y1="32" x2="60" y2="56" stroke="var(--vessel-line)" stroke-width="1.5" opacity=".4"/><line x1="96" y1="32" x2="80" y2="56" stroke="var(--vessel-line)" stroke-width="1.5" opacity=".4"/>'
+      };
+      case "chemex": return {
+        bodies:[body(26,114,22,30,110,134,60,80,68)],
+        inner:{topY:26,botY:130}, capacity:600,
+        deco:'<rect x="55" y="63" width="30" height="10" rx="2" fill="var(--mat-metal)" stroke="var(--vessel-line)" stroke-width="1.3"/><line x1="55" y1="68" x2="85" y2="68" stroke="var(--vessel-line)" stroke-width=".8" opacity=".4"/>'
+      };
+      case "frenchpress": return {
+        bodies:[body(46,94,34,44,96,124)],
+        handle:{x:96,topY:44,botY:108}, inner:{topY:40,botY:120}, capacity:320,
+        deco:'<rect x="66" y="11" width="8" height="26" rx="3" fill="var(--mat-metal)" stroke="var(--vessel-line)" stroke-width="1.6"/><circle cx="70" cy="11" r="8" fill="var(--mat-metal)" stroke="var(--vessel-line)" stroke-width="1.6"/><path d="M44,44 q-10,-2 -12,6" fill="none" stroke="var(--vessel-line)" stroke-width="2" stroke-linecap="round"/>'
+      };
+      case "aeropress": return {
+        bodies:[body(48,92,58,46,94,124)],
+        inner:{topY:64,botY:120}, capacity:260,
+        deco:'<rect x="52" y="10" width="36" height="12" rx="3" fill="var(--mat-metal)" stroke="var(--vessel-line)" stroke-width="1.6"/><rect x="66" y="20" width="8" height="40" rx="3" fill="var(--mat-metal)" stroke="var(--vessel-line)" stroke-width="1.6"/>'
+      };
+      case "mokapot": return {
+        bodies:[body(46,94,26,58,82,76), body(58,82,72,34,106,130)],
+        handle:{x:94,topY:54,botY:104}, inner:{topY:82,botY:126}, capacity:220,
+        deco:'<path d="M40,88 L24,80 L40,98 Z" fill="var(--mat-metal)" stroke="var(--vessel-line)" stroke-width="1.6" stroke-linejoin="round"/>'+
+             '<rect x="52" y="69" width="36" height="9" rx="2.5" fill="var(--mat-metal)" stroke="var(--vessel-line)" stroke-width="1.3"/>'
+      };
+      case "drip": return {
+        bodies:[body(46,94,20,52,88,46), body(38,102,64,46,94,130)],
+        handle:{x:102,topY:70,botY:126}, inner:{topY:70,botY:126}, capacity:1150,
+        deco:'<circle cx="63" cy="53" r="2" fill="var(--vessel-line)" opacity=".4"/><circle cx="77" cy="57" r="2" fill="var(--vessel-line)" opacity=".4"/><circle cx="70" cy="60" r="2" fill="var(--vessel-line)" opacity=".4"/>'
+      };
+      case "cezve": return {
+        bodies:[body(54,86,48,32,108,122)],
+        inner:{topY:56,botY:118}, capacity:90,
+        deco:'<path d="M108,76 L136,60" stroke="var(--vessel-line)" stroke-width="6" stroke-linecap="round"/>'+
+             '<path d="'+trapPath(body(10,32,96,14,28,120))+'" fill="var(--mat-ceramic)" stroke="var(--vessel-line)" stroke-width="2" opacity=".8"/>'
+      };
+    }
+  }
+
+  var CUP_KINDS = Object.keys(CUPS);
+
+  var VESSEL_NAMES = {
+    demitasse:"Demitasse Fincanı",
+    smallGlass:"Küçük Cam Bardak (Cortado tipi)",
+    cappuccinoCup:"Kapuçino Fincanı",
+    tallGlass:"Latte Bardağı",
+    mug:"Kupa (Mug)",
+    tallGlassIce:"Uzun Buzlu Servis Bardağı",
+    v60:"V60 Huni + Sürahi",
+    chemex:"Chemex Sürahisi",
+    frenchpress:"French Press Haznesi",
+    aeropress:"Aeropress Haznesi",
+    mokapot:"Moka Pot Haznesi",
+    drip:"Filtre Kahve Sürahisi (Karaf)",
+    cezve:"Cezve / İbrik",
+    bowl:"Kahve Kâsesi (Bol)"
+  };
+  function vesselCapacity(kind){
+    if(CUPS[kind]) return CUPS[kind].capacity;
+    var e = equip(kind);
+    return e ? e.capacity : null;
+  }
+
+  function drawLiquid(layers, capacity, topY, botY, w){
+    var total = layers.reduce(function(s,l){return s+l[1];},0);
+    var fillRatio = Math.min(0.94, total/capacity);
+    var innerH = botY - topY;
+    var filledH = fillRatio*innerH;
+    var y = botY;
+    var rects = "";
+    layers.forEach(function(l){
+      var h = (l[1]/total)*filledH;
+      y -= h;
+      rects += '<rect x="0" y="'+y.toFixed(1)+'" width="'+w+'" height="'+(h+0.6).toFixed(1)+'" fill="var(--l-'+l[0]+')"></rect>';
+    });
+    return {svg:rects, topY:y};
+  }
+
+  var uidCounter = 0;
+
+  function vesselSVG(kind, layers){
+    uidCounter++;
+    var uid = uidCounter;
+    var clipId = "clip-"+uid;
+    var W = 140, H = 172;
+    var out = "";
+    var matKind = MATERIAL_KIND[kind] || "ceramic";
+    var stops = MATERIAL_STOPS[matKind];
+    var matGradId = "mat-"+uid, glowId = "glow-"+uid, shadowId = "shadow-"+uid;
+    var defs = '<defs>'+
+      '<linearGradient id="'+matGradId+'" x1="4%" y1="6%" x2="96%" y2="96%">'+
+        '<stop offset="0%" stop-color="'+stops[0]+'"/>'+
+        '<stop offset="42%" stop-color="'+stops[1]+'"/>'+
+        '<stop offset="100%" stop-color="'+stops[2]+'"/>'+
+      '</linearGradient>'+
+      '<radialGradient id="'+glowId+'" cx="30%" cy="22%" r="55%">'+
+        '<stop offset="0%" stop-color="#ffffff" stop-opacity=".6"/>'+
+        '<stop offset="65%" stop-color="#ffffff" stop-opacity="0"/>'+
+      '</radialGradient>'+
+      '<filter id="'+shadowId+'" x="-40%" y="-20%" width="180%" height="180%">'+
+        '<feDropShadow dx="0" dy="3" stdDeviation="2.4" flood-color="#3a2414" flood-opacity="0.24"/>'+
+      '</filter>'+
+    '</defs>';
+    var mat = "url(#"+matGradId+")";
+    out += defs;
+
+    if(CUP_KINDS.indexOf(kind) !== -1){
+      var g = CUPS[kind];
+      var mainPath = trapPath(g.body);
+      if(g.saucer){ out += drawSaucer(g.saucer); }
+      out += '<g filter="url(#'+shadowId+')"><path d="'+mainPath+'" fill="'+mat+'"/></g>';
+      out += '<clipPath id="'+clipId+'"><path d="'+mainPath+'"/></clipPath>';
+      var liquid = drawLiquid(layers, g.capacity, g.inner.topY, g.inner.botY, W);
+      out += '<g clip-path="url(#'+clipId+')">';
+      out += '<rect x="0" y="0" width="'+W+'" height="'+H+'" fill="url(#'+glowId+')"/>';
+      out += liquid.svg;
+      var wTop = widthAt(g.body, liquid.topY);
+      out += '<ellipse cx="'+wTop.cx.toFixed(1)+'" cy="'+liquid.topY.toFixed(1)+'" rx="'+Math.max(2,wTop.rx-3).toFixed(1)+'" ry="2.4" fill="rgba(255,255,255,.34)"/>';
+      out += '</g>';
+      if(g.ice){
+        out += '<g opacity=".85">'+
+          '<rect x="52" y="'+(g.inner.topY+6)+'" width="14" height="14" rx="3" fill="rgba(214,232,227,.75)" stroke="var(--vessel-line)" stroke-width="1" transform="rotate(-12 59 '+(g.inner.topY+13)+')"/>'+
+          '<rect x="72" y="'+(g.inner.topY+16)+'" width="13" height="13" rx="3" fill="rgba(214,232,227,.75)" stroke="var(--vessel-line)" stroke-width="1" transform="rotate(10 78 '+(g.inner.topY+22)+')"/>'+
+          '</g>';
+      }
+      out += '<path d="'+wallPath(g.body)+'" fill="none" stroke="var(--vessel-line)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>';
+      out += '<ellipse cx="'+g.rim.cx+'" cy="'+g.rim.cy+'" rx="'+g.rim.rx+'" ry="'+g.rim.ry+'" fill="none" stroke="var(--vessel-line)" stroke-width="1.8" opacity=".8"/>';
+      if(g.handle){
+        out += '<path d="'+handlePath(g.handle.x, g.handle.topY, g.handle.botY)+'" fill="none" stroke="var(--vessel-line)" stroke-width="6.5" stroke-linecap="round"/>';
+        out += '<path d="'+handlePath(g.handle.x-1.5, g.handle.topY+3, g.handle.botY-3)+'" fill="none" stroke="rgba(255,255,255,.4)" stroke-width="1.6" stroke-linecap="round"/>';
+      }
+    } else {
+      var e = equip(kind);
+      var lastBody = e.bodies[e.bodies.length-1];
+      var lastPath = trapPath(lastBody);
+      e.bodies.slice(0,-1).forEach(function(b){
+        out += '<path d="'+trapPath(b)+'" fill="'+mat+'" stroke="var(--vessel-line)" stroke-width="2.5" stroke-linejoin="round"/>';
+      });
+      out += '<g filter="url(#'+shadowId+')"><path d="'+lastPath+'" fill="'+mat+'" stroke="var(--vessel-line)" stroke-width="2.5" stroke-linejoin="round"/></g>';
+      out += '<clipPath id="'+clipId+'"><path d="'+lastPath+'"/></clipPath>';
+      var liquidE = drawLiquid(layers, e.capacity, e.inner.topY, e.inner.botY, W);
+      out += '<g clip-path="url(#'+clipId+')">';
+      out += '<rect x="0" y="0" width="'+W+'" height="'+H+'" fill="url(#'+glowId+')"/>';
+      out += liquidE.svg;
+      var wTopE = widthAt(lastBody, liquidE.topY);
+      out += '<ellipse cx="'+wTopE.cx.toFixed(1)+'" cy="'+liquidE.topY.toFixed(1)+'" rx="'+Math.max(2,wTopE.rx-3).toFixed(1)+'" ry="2.2" fill="rgba(255,255,255,.32)"/>';
+      out += '</g>';
+      out += '<path d="'+lastPath+'" fill="none" stroke="var(--vessel-line)" stroke-width="2.5" stroke-linejoin="round"/>';
+      if(e.deco) out += e.deco;
+      if(e.handle){
+        out += '<path d="'+handlePath(e.handle.x, e.handle.topY, e.handle.botY)+'" fill="none" stroke="var(--vessel-line)" stroke-width="6" stroke-linecap="round"/>';
+        out += '<path d="'+handlePath(e.handle.x-1.5, e.handle.topY+3, e.handle.botY-3)+'" fill="none" stroke="rgba(255,255,255,.36)" stroke-width="1.5" stroke-linecap="round"/>';
+      }
+    }
+
+    return '<svg class="vessel-svg" viewBox="0 0 '+W+' '+H+'" xmlns="http://www.w3.org/2000/svg">'+out+'</svg>';
+  }
+
+  /* ---------- data ---------- */
+  var CATEGORIES = [
+    {
+      id:"espresso", accent:"--accent", num:"01",
+      title:"Espresso Bazlı",
+      sub:"Espresso makinesinde çekilen tek/çift shot üzerine kurulu klasik kafe menüsü.",
+      origin:"Brezilya, Guatemala ya da Kolombiya ağırlıklı blend — doğal düşük asiditeleri ve fındık/çikolata notaları sayesinde yüksek basınçlı çekimde ekşimezler, kalın crema ve dengeli gövde verirler.",
+      tips:["Çekirdeği demlemeden hemen önce öğütün; öğütülmüş kahve dakikalar içinde aroma kaybeder.","Dozu hassas bir teraziyle tartın — 1 gramlık fark bile sonucu ekşi ya da acı yöne çekebilir."],
+      drinks:[
+        {name:"Ristretto", note:"Kısa ve yoğun çekim", dose:"18g", vessel:"demitasse", layers:[["espresso",20]], ratio:"1:1", ratioLabel:"kahve dozu : espresso çıkışı", roast:4, grind:"Espresso, çok ince", temp:"92–94°C", time:"15–20 sn", tool:"Espresso Makinesi"},
+        {name:"Espresso (Solo)", note:"Tek shot, klasik", dose:"9g", vessel:"demitasse", layers:[["espresso",30]], ratio:"1:3", ratioLabel:"kahve dozu : espresso çıkışı", roast:4, grind:"Espresso, ince", temp:"92–94°C", time:"25–30 sn", tool:"Espresso Makinesi"},
+        {name:"Doppio", note:"Çift shot espresso", dose:"18g", vessel:"demitasse", layers:[["espresso",60]], ratio:"1:3", ratioLabel:"kahve dozu : espresso çıkışı", roast:4, grind:"Espresso, ince", temp:"92–94°C", time:"25–30 sn", tool:"Espresso Makinesi"},
+        {name:"Lungo", note:"Uzun çekim, daha hafif", dose:"18g", vessel:"demitasse", layers:[["espresso",90]], ratio:"1:5", ratioLabel:"kahve dozu : espresso çıkışı", roast:4, grind:"Espresso, ince", temp:"92–94°C", time:"35–40 sn", tool:"Espresso Makinesi"},
+        {name:"Americano", note:"Espresso + sıcak su", dose:"18g", vessel:"mug", layers:[["espresso",60],["water",120]], ratio:"1:2", ratioLabel:"espresso : su", roast:4, grind:"Espresso, ince", temp:"92–94°C", time:"25–30 sn", tool:"Espresso Makinesi"},
+        {name:"Cortado", note:"Eşit espresso ve süt", dose:"18g", vessel:"smallGlass", layers:[["espresso",30],["milk",30]], ratio:"1:1", ratioLabel:"espresso : süt", roast:4, grind:"Espresso, ince", temp:"92–94°C", time:"25–30 sn", tool:"Espresso Mak. + Süt Buharlayıcı"},
+        {name:"Macchiato", note:"Espresso, azıcık köpük", dose:"9g", vessel:"demitasse", layers:[["espresso",30],["foam",10]], ratio:"3:1", ratioLabel:"espresso : köpük", roast:4, grind:"Espresso, ince", temp:"92–94°C", time:"25–30 sn", tool:"Espresso Mak. + Süt Buharlayıcı"},
+        {name:"Piccolo Latte", note:"Mini latte, güçlü kahve", dose:"18g", vessel:"smallGlass", layers:[["espresso",20],["milk",70],["foam",10]], ratio:"1:4", ratioLabel:"espresso : süt (köpük dahil)", roast:4, grind:"Espresso, çok ince", temp:"92–94°C", time:"15–20 sn", tool:"Espresso Mak. + Süt Buharlayıcı", servingCup:"Küçük Cam Bardak (Piccolo tipi)"},
+        {name:"Flat White", note:"İnce mikroköpük, yoğun kahve", dose:"18g", vessel:"cappuccinoCup", layers:[["espresso",30],["milk",140],["foam",10]], ratio:"1:5", ratioLabel:"espresso : süt (köpük dahil)", roast:3, origin:"Kolombiya ya da Etiyopya (single origin) — Kolombiya'nın karamelli dengesi ya da Etiyopya'nın meyvemsi parlaklığı, flat white'ın ince süt köpüğünün altında bile belirgin kalır.", grind:"Espresso, çok ince", temp:"92–94°C", time:"25–30 sn", tool:"Espresso Mak. + Süt Buharlayıcı"},
+        {name:"Cappuccino", note:"Eşit üçe bölünmüş klasik", dose:"18g", vessel:"cappuccinoCup", layers:[["espresso",60],["milk",60],["foam",60]], ratio:"1:1:1", ratioLabel:"espresso : süt : köpük", roast:4, grind:"Espresso, ince", temp:"92–94°C", time:"25–30 sn", tool:"Espresso Mak. + Süt Buharlayıcı"},
+        {name:"Latte", note:"Bol süt, ince köpük", dose:"18g", vessel:"tallGlass", layers:[["espresso",60],["milk",230],["foam",10]], ratio:"1:4", ratioLabel:"espresso : süt (köpük dahil)", roast:4, grind:"Espresso, ince", temp:"92–94°C", time:"25–30 sn", tool:"Espresso Mak. + Süt Buharlayıcı"},
+        {name:"Mocha", note:"Latte + çikolata sosu", dose:"18g", vessel:"tallGlass", layers:[["espresso",60],["choc",30],["milk",200],["foam",10]], ratio:"1:4", ratioLabel:"espresso : (çikolata + süt + köpük)", roast:4, grind:"Espresso, ince", temp:"92–94°C", time:"25–30 sn", tool:"Espresso Mak. + Süt Buharlayıcı"},
+        {name:"Affogato", note:"Sıcak shot, soğuk dondurma", dose:"9g", vessel:"smallGlass", layers:[["icecream",100],["espresso",30]], ratio:"—", roast:4, grind:"Espresso, ince", temp:"92–94°C", time:"25–30 sn", tool:"Espresso Makinesi", servingCup:"Küçük Cam Kâse (Tatlı Kâsesi)", tips:["Dondurma servis anına kadar dondurucuda kalmalı, erimeye başlamadan servis edilmeli."]},
+        {name:"Espresso Con Panna", note:"Üzeri çırpılmış krema", dose:"18g", vessel:"demitasse", layers:[["espresso",60],["cream",20]], ratio:"3:1", ratioLabel:"espresso : krema", roast:4, grind:"Espresso, ince", temp:"92–94°C", time:"25–30 sn", tool:"Espresso Makinesi"},
+        {name:"Long Black", note:"Su üzerine çekilmiş espresso, crema korunur", dose:"18g", vessel:"demitasse", layers:[["water",60],["espresso",30]], ratio:"1:2", ratioLabel:"espresso : su", roast:4, grind:"Espresso, ince", temp:"92–94°C", time:"25–30 sn", tool:"Espresso Makinesi", origin:"Brezilya, Guatemala ya da Kolombiya blend — Americano'nun tersi sırayla (önce su, üzerine espresso) hazırlanır, crema korunduğu için aroması daha belirgin kalır."},
+        {name:"Viyana Kahvesi (Einspänner)", note:"Bol krema ile, bardakta", dose:"18g", vessel:"smallGlass", layers:[["espresso",60],["cream",40]], ratio:"3:2", ratioLabel:"espresso : krema", roast:4, grind:"Espresso, ince", temp:"92–94°C", time:"25–30 sn", tool:"Espresso Makinesi", origin:"Brezilya ya da Guatemala blend — düşük asidite ve dengeli gövde, bol çırpılmış kremanın altında bile hissedilir; Viyana kahve evi geleneğinden gelir."}
+      ]
+    },
+    {
+      id:"soguk", accent:"--accent-cold", num:"02",
+      title:"Soğuk Kahveler",
+      sub:"Buzla ya da uzun süre soğukta demlenerek servis edilen versiyonlar.",
+      tips:["Buz erimeden servis edin; bekleyen buzlu kahve hızla sulanıp oranı bozar.","Bardağı önceden soğutmak buzun daha yavaş erimesini ve oranın daha uzun korunmasını sağlar."],
+      drinks:[
+        {name:"Cold Brew", note:"12–16 saat soğuk demleme", dose:"100g", vessel:"tallGlassIce", layers:[["coldbrew",120],["water",120]], ratio:"1:1", ratioLabel:"konsantre : su", roast:4, iced:true, grind:"Kalın", temp:"Oda sıcaklığı / buzdolabı", time:"12–16 saat", tool:"Kavanoz / Cold Brew Demleyici", origin:"Brezilya ya da Sumatra — düşük asiditeleri ve doğal çikolata/toprak notaları sayesinde 12+ saatlik uzun temasta bile acılaşmaz, pürüzsüz kalır.", tips:["Demleme (kavanozda): 100g kalın çekilmiş kahve : 1000ml soğuk su, oranı 1:10.","Kalın öğütüm şart; ince öğütüm bulanık ve aşırı ekstrakte bir sonuç verir."]},
+        {name:"Iced Americano", note:"Buz üzerine espresso ve su", dose:"18g", vessel:"tallGlassIce", layers:[["espresso",60],["water",150]], ratio:"1:2.5", ratioLabel:"espresso : su", roast:4, iced:true, grind:"Espresso, ince", temp:"92–94°C", time:"25–30 sn", tool:"Espresso Makinesi", origin:"Brezilya, Guatemala ya da Kolombiya blend — düşük asiditeleri sayesinde buzla seyrelince de ekşimez, sıcak Americano ile aynı dengeyi korur."},
+        {name:"Iced Latte", note:"Buzlu süt, ince espresso katmanı", dose:"18g", vessel:"tallGlassIce", layers:[["espresso",30],["milk",210]], ratio:"1:7", ratioLabel:"espresso : süt", roast:4, iced:true, grind:"Espresso, çok ince", temp:"92–94°C", time:"25–30 sn", tool:"Espresso Mak. + Soğuk Süt", origin:"Kolombiya ya da Brezilya — karamel ve fındık notaları soğuk sütle birleşince tatlılığı öne çıkarır, buzda da lezzeti kaybolmaz."}
+      ]
+    },
+    {
+      id:"filtre", accent:"--accent-filter", num:"03",
+      title:"Filtre & Manuel Demleme",
+      sub:"Kahve ile suyun doğrudan temas ettiği, makinesiz ya da damlatmalı yöntemler.",
+      tips:["Su kalitesi belirleyicidir: filtrelenmiş, TDS 75–250 ppm arası su kullanın."],
+      drinks:[
+        {name:"V60", note:"Elde damlatma, temiz profil", dose:"15g", vessel:"v60", layers:[["water",250]], ratio:"1:17", ratioLabel:"kahve : su", roast:2, origin:"Etiyopya Yirgacheffe ya da Kenya AA — yüksek asiditeleri ve çiçeksi/turunçgil notaları, ince gövdeli filtre demlemesinde en net şekilde ortaya çıkar.", grind:"Orta-ince", temp:"92–96°C", time:"2:30–3:00 dk", tool:"V60 Dripper + Filtre Kağıdı", servingCup:"Kupa ya da Fincan"},
+        {name:"Chemex", note:"Kalın filtre, yumuşak içim", dose:"30g", vessel:"chemex", layers:[["water",500]], ratio:"1:17", ratioLabel:"kahve : su", roast:2, origin:"Kolombiya ya da Etiyopya — kalın kağıt filtrenin yağları süzmesi sayesinde bu kökenlerin temiz, karamelli asiditesi bulanıklaşmadan öne çıkar.", grind:"Kaba-orta", temp:"92–96°C", time:"4–5 dk", tool:"Chemex + Kalın Filtre", servingCup:"Kupa ya da Fincan"},
+        {name:"French Press", note:"Tam gövdeli, yağlı doku", dose:"15g", vessel:"frenchpress", layers:[["water",250]], ratio:"1:16", ratioLabel:"kahve : su", roast:3, origin:"Sumatra ya da Brezilya — düşük asidite ve toprağımsı/baharatlı ağırlıkları, metal filtrenin bıraktığı yağlarla birleşince tam gövdeli bir içim yaratır.", tips:["Pistonu hızlı bastırmayın; telve karışıp acılık oluşturur."], grind:"Kaba", temp:"92–96°C", time:"4 dk demleme + bas", tool:"French Press (Piston)", servingCup:"Kupa (Mug)"},
+        {name:"Aeropress", note:"Hızlı, çok yönlü", dose:"16g", vessel:"aeropress", layers:[["water",220]], ratio:"1:14", ratioLabel:"kahve : su", roast:2, origin:"Etiyopya ya da Kosta Rika — parlak asiditeleri, kısa temas süresine ve esnek basınçlı demlemeye hızla yanıt vererek canlı bir fincan verir.", grind:"Orta-ince", temp:"85–92°C", time:"1–2 dk + 30 sn pres", tool:"Aeropress", servingCup:"Kupa ya da Fincan"},
+        {name:"Moka Pot", note:"Ocak üstü, yoğun ve güçlü", dose:"18g", vessel:"mokapot", layers:[["water",180]], ratio:"1:10", ratioLabel:"kahve : su", roast:4, origin:"Brezilya ya da koyu İtalyan tarzı blend — düşük asidite ve yoğun gövdeleri, moka potun yüksek basınç ve sıcaklığında acılaşmadan güçlü bir kahve verir.", tips:["Sepetteki kahveyi sıkıştırmayın; moka potun düşük basıncında sıkıştırma tıkanıklığa ve acı bir sonuca yol açar."], grind:"Orta-ince (tuz tanesi)", temp:"Orta ateş", time:"4–5 dk", tool:"Ocak Üstü Moka Pot", servingCup:"Demitasse Fincanı"},
+        {name:"Filtre Kahve Makinesi", note:"Otomatik damlatma", dose:"60g", vessel:"drip", layers:[["water",1000]], ratio:"1:17", ratioLabel:"kahve : su", roast:3, origin:"Kolombiya ya da Guatemala — dengeli asidite ve karamelli tatlılıkları, günlük ve tutarlı damlatma demlemesinde her seferinde aynı sonucu verir.", grind:"Orta", temp:"Otomatik ~92–96°C", time:"4–6 dk", tool:"Damlatmalı Filtre Makinesi", servingCup:"Kupa (Mug)"}
+      ]
+    },
+    {
+      id:"geleneksel", accent:"--accent-trad", num:"04",
+      title:"Geleneksel",
+      sub:"Kum ya da ocakta, cezve içinde köpüklü pişirilen yöntem.",
+      tips:["Öğütüm mutlaka pudra kıvamında olmalı — kalın öğütümde köpük tutmaz.","Soğuk ve yumuşak (az kireçli) su kullanmak daha kalıcı bir köpük verir."],
+      drinks:[
+        {name:"Türk Kahvesi", note:"Cezvede, kısık ateşte, köpüklü", dose:"7g", doseHint:"1 dolu kahve kaşığı", vessel:"cezve", layers:[["water",65]], ratio:"1:9", ratioLabel:"kahve : su", roast:4, origin:"Brezilya (düşük asidite) ya da Yemen Harar stili (yoğun, şaraba yakın meyvemsi karakter) — pudra inceliğindeki öğütümde yoğunlaşan tada iyi eşlik eder.", grind:"Toz (çok ince)", temp:"Kısık ateş", time:"4–5 dk", tool:"Cezve / İbrik", servingCup:"Türk Kahve Fincanı (~60–70 ml)"}
+      ]
+    },
+    {
+      id:"dunya", accent:"--accent-world", num:"05",
+      title:"Dünyadan Kahveler",
+      sub:"Kendi ülkesine özgü ekipman ya da tekniği olan, dünya çapında tanınan yerel kahve kültürleri.",
+      tips:["Her ülkenin kendi damak zevkine göre şeker/tatlandırma oranı farklıdır; tarifler başlangıç noktasıdır.","Yerel ekipman (phin, džezva, shaker) bulunamıyorsa en yakın alternatif kullanılabilir, sonuç küçük farklılıklar gösterebilir."],
+      drinks:[
+        {name:"Vietnam Kahvesi", note:"Phin filtresi + koyulaştırılmış süt, buzlu", dose:"20g", doseHint:"yaklaşık 3–4 tatlı kaşığı", vessel:"tallGlassIce", layers:[["condensedmilk",45],["coffee",135]], ratio:"3:1", ratioLabel:"kahve : koyulaştırılmış süt", roast:5, iced:true, grind:"Orta-kalın (phin için)", temp:"90–96°C", time:"4–5 dk", tool:"Phin Filtresi + Bardak", origin:"Vietnam Robusta (ya da Robusta-Arabica blend) — güçlü, sert ve çikolatamsı yapısı koyulaştırılmış sütün yoğun tatlılığını dengeler."},
+        {name:"Yunan Frappe", note:"Çırpılmış hazır kahve köpüğü, buzlu", dose:"10g", doseHint:"2 tatlı kaşığı hazır (instant) kahve", vessel:"tallGlassIce", layers:[["coffee",90],["foam",90]], ratio:"1:1", ratioLabel:"kahve köpüğü : su", roast:5, iced:true, grind:"Öğütüm gerekmez (hazır/granül kahve)", temp:"Soğuk (buzlu su ile çırpılır)", time:"1–2 dk çırpma", tool:"Shaker / Kapaklı Kavanoz", origin:"Yunanistan/Kıbrıs'ta yaygın koyu kavrulmuş hazır (instant) kahve — çırpıldığında yoğun ve kalıcı bir köpük verir."},
+        {name:"Küba Kahvesi (Cortadito)", note:"Şekerle çırpılmış köpüklü espresso", dose:"18g", vessel:"demitasse", layers:[["espresso",30],["milk",10],["foam",10]], ratio:"3:2", ratioLabel:"espresso : süt (köpük dahil)", roast:5, grind:"Espresso, ince", temp:"92–94°C", time:"25–30 sn", tool:"Espresso Makinesi (ya da Moka Pot)", origin:"Küba ya da koyu kavrulmuş Orta Amerika blend — yoğun, düşük asiditeli yapı şekerle çırpılan köpüğün (espumita) kalıcı olmasını sağlar."},
+        {name:"Fransız Café au Lait", note:"Filtre kahve + sıcak süt, eşit oran, kâsede", dose:"15g", doseHint:"standart filtre kahve dozu", vessel:"bowl", layers:[["coffee",150],["milk",150]], ratio:"1:1", ratioLabel:"kahve : süt", roast:3, grind:"Orta (filtre kahve gibi)", temp:"92–96°C", time:"4 dk", tool:"Filtre Kahve Ekipmanı + Süt Tenceresi", origin:"Orta Amerika ya da Afrika kökenli orta kavrulmuş filtre kahvesi — eşit miktarda sütle karıştığında ekşimeden dengeli bir tat verir."},
+        {name:"Bosna Kahvesi", note:"Džezvede, Türk kahvesine benzer ama biraz daha kalın öğütülmüş", dose:"7g", doseHint:"1 dolu kahve kaşığı", vessel:"cezve", layers:[["water",65]], ratio:"1:9", ratioLabel:"kahve : su", roast:4, grind:"Toz (Türk kahvesinden biraz daha kalın)", temp:"Kısık ateş", time:"4–5 dk", tool:"Cezve / Džezva", servingCup:"Fildžan (Bosna Kahve Fincanı, ~60–70 ml)", origin:"Brezilya ya da Orta Amerika kökenli — Türk kahvesine yakın ama biraz daha kalın öğütülmüş çekirdek, kaynatılmadan yavaşça ısıtılan yönteme daha iyi uyum sağlar."}
+      ]
+    }
+  ];
+
+  function el(tag, cls, html){
+    var e = document.createElement(tag);
+    if(cls) e.className = cls;
+    if(html !== undefined) e.innerHTML = html;
+    return e;
+  }
+
+  function roastDots(level){
+    var html = '<span class="dots">';
+    for(var i=1;i<=5;i++){
+      html += '<span'+(i===level?' class="active"':'')+' style="background:'+ROAST_COLORS[i]+'"></span>';
+    }
+    html += '</span>';
+    return html;
+  }
+
+  function layerMl(d, key){
+    var l = d.layers.filter(function(x){ return x[0]===key; })[0];
+    return l ? l[1] : 0;
+  }
+
+  function computeTips(cat, d){
+    var tips = [GENERAL_TIP].concat(cat.tips || []);
+    var hasMilk = d.layers.some(function(l){ return l[0]==="milk" || l[0]==="foam"; });
+    if(hasMilk) tips = tips.concat([MILK_TIP]);
+    if(d.tips) tips = tips.concat(d.tips);
+    return tips;
+  }
+
+  /* ---------- step-by-step brew guides (shared vocabulary per method) ---------- */
+  function stepsEspresso(d){
+    var steps = [];
+    steps.push({role:"Hazırlık", text:d.dose+" kahveyi "+d.grind+" öğütün, portafiltreye doldurup sıkıştırın (tamp)."});
+    steps.push({role:"Çekme", text:d.temp+"'de "+d.time+" boyunca espressoyu çekin (çıkış: "+layerMl(d,"espresso")+" ml)."});
+    var waterMl = layerMl(d,"water");
+    var milkMl = layerMl(d,"milk") + layerMl(d,"foam");
+    if(waterMl > 0){
+      steps.push({role: d.iced ? "Buz" : "Su", text:(d.iced ? "Buz dolu bardağa " : "Üzerine ")+waterMl+" ml "+(d.iced ? "soğuk" : "sıcak")+" su ekleyin."});
+    } else if(milkMl > 0){
+      if(d.iced){
+        steps.push({role:"Süt", text:"Soğuk sütü hazırlayın; buzla erken karışmaması için kenardan yavaşça dökeceksiniz."});
+      } else {
+        steps.push({role:"Süt", text:"Sütü buharla 55–65°C arasında ısıtıp mikroköpük elde edin ("+milkMl+" ml)."});
+      }
+    }
+    steps.push({role:"Servis", text:ASSEMBLE[d.name] || "Servis edin."});
+    return steps;
+  }
+  function stepsColdBrew(d){
+    return [
+      {role:"Hazırlık", text:d.dose+" kahveyi kalın çekin."},
+      {role:"Bekletme", text:"1000ml soğuk suyla karıştırıp oda sıcaklığında ya da buzdolabında "+d.time+" bekletin."},
+      {role:"Süzme", text:"Kahve telvesini ince bir filtreden geçirip ayırın."},
+      {role:"Servis", text:"1 ölçek konsantreyi 1 ölçek su ya da sütle seyreltip bol buzla servis edin."}
+    ];
+  }
+  function stepsPourover(d){
+    return [
+      {role:"Hazırlık", text:d.dose+" kahveyi "+d.grind+" öğütüp filtreye koyun, filtreyi sıcak suyla durulayın."},
+      {role:"Islatma", text:"Kahvenin yaklaşık 2 katı suyla ıslatıp 30–45 saniye (bloom) bekleyin."},
+      {role:"Demleme", text:"Kalan suyu (toplam "+layerMl(d,"water")+" ml) dairesel hareketlerle yavaşça dökün, "+d.time+" içinde tamamlayın."},
+      {role:"Servis", text:"Filtreyi çıkarıp sıcak servis edin."}
+    ];
+  }
+  function stepsImmersion(d){
+    return [
+      {role:"Hazırlık", text:d.dose+" kahveyi "+d.grind+" öğütüp hazneye koyun."},
+      {role:"Demleme", text:d.temp+" suyu ("+layerMl(d,"water")+" ml) ekleyip kapağı kapatın, 4 dakika bekletin."},
+      {role:"Bastırma", text:"Pistonu yavaş ve düz bir hareketle sonuna kadar bastırın."},
+      {role:"Servis", text:"Hemen dökün; telveyle uzun temas acılık yaratır."}
+    ];
+  }
+  function stepsAeropress(d){
+    return [
+      {role:"Hazırlık", text:d.dose+" kahveyi "+d.grind+" öğütüp filtreyi durulayıp hazneye takın."},
+      {role:"Demleme", text:d.temp+" suyu ("+layerMl(d,"water")+" ml) ekleyip karıştırın, 1–2 dakika bekletin."},
+      {role:"Presleme", text:"Pistonu 20–30 saniyede sonuna kadar yavaşça bastırın."},
+      {role:"Servis", text:"İstenirse sıcak suyla seyreltip servis edin."}
+    ];
+  }
+  function stepsMoka(d){
+    return [
+      {role:"Hazırlık", text:"Alt hazneyi valfe kadar suyla doldurun, "+d.dose+" kahveyi "+d.grind+" öğütüp sepete koyun (bastırmayın)."},
+      {role:"Pişirme", text:"Ocakta orta ateşte, kapağı kapalı pişirin; "+d.time+" içinde üst hazne dolar."},
+      {role:"Servis", text:"Fokurdama sesini duyunca ocaktan alıp hemen servis edin."}
+    ];
+  }
+  function stepsDrip(d){
+    return [
+      {role:"Hazırlık", text:d.dose+" kahveyi "+d.grind+" öğütüp filtreye koyun."},
+      {role:"Demleme", text:layerMl(d,"water")+" ml suyu hazneye doldurup makineyi çalıştırın, "+d.time+" içinde tamamlanır."},
+      {role:"Servis", text:"Demleme biter bitmez sıcak servis edin."}
+    ];
+  }
+  function stepsTurkish(d){
+    return [
+      {role:"Hazırlık", text:d.dose+" kahveyi ("+d.doseHint+") cezveye koyun, "+layerMl(d,"water")+" ml soğuk su ve istenirse şeker ekleyip karıştırın."},
+      {role:"Pişirme", text:"Kısık ateşte, karıştırmadan "+d.time+" pişirin."},
+      {role:"Köpük", text:"Köpük yükselmeye başlayınca taşırmadan alıp fincanlara paylaştırın; cezveyi ocağa geri koyup 2–3 kez tekrarlayın."},
+      {role:"Servis", text:"Kalan kahveyi fincanlara boşaltıp servis edin."}
+    ];
+  }
+  function stepsLongBlack(d){
+    return [
+      {role:"Hazırlık", text:d.dose+" kahveyi "+d.grind+" öğütün, portafiltreye doldurup sıkıştırın (tamp)."},
+      {role:"Su", text:"Önce bardağa "+layerMl(d,"water")+" ml sıcak su koyun."},
+      {role:"Çekme", text:d.temp+"'de "+d.time+" boyunca espressoyu doğrudan suyun üzerine çekin — crema korunur."},
+      {role:"Servis", text:"Karıştırmadan servis edin."}
+    ];
+  }
+  function stepsVietnam(d){
+    return [
+      {role:"Hazırlık", text:d.dose+" kahveyi ("+d.doseHint+") phin filtresine koyup hafifçe bastırın."},
+      {role:"Islatma", text:"Az miktarda sıcak suyla ıslatıp 30 saniye bekleyin, sonra phin'i doldurup kapağını kapatın."},
+      {role:"Damlatma", text:"Kahvenin bardağın dibindeki koyulaştırılmış süte "+d.time+" boyunca damlamasını bekleyin."},
+      {role:"Servis", text:"Karıştırıp buz dolu bardağa dökün, isteğe göre daha fazla buzla servis edin."}
+    ];
+  }
+  function stepsFrappe(d){
+    return [
+      {role:"Hazırlık", text:d.dose+" ("+d.doseHint+") kahveyi, biraz şeker ve azıcık soğuk suyla shaker'a koyun."},
+      {role:"Çırpma", text:"Sert şekilde çırpıp/sallayıp ("+d.time+") yoğun, kalıcı bir köpük oluşturun."},
+      {role:"Servis", text:"Buz dolu bardağa dökün, üzerine soğuk su (ya da süt) ekleyip servis edin."}
+    ];
+  }
+  function stepsCortadito(d){
+    return [
+      {role:"Hazırlık", text:d.dose+" kahveyi "+d.grind+" öğütün; bir tatlı kaşığı şekeri küçük bir kaba ayırın."},
+      {role:"Çekme", text:"Espressoyu çekin, ilk damlaları şekerle hızlıca çırpıp koyu, kremamsı bir köpük (espumita) oluşturun."},
+      {role:"Karıştırma", text:"Kalan espressoyu köpüğe yavaşça karıştırın, üzerine azıcık süt ekleyin."},
+      {role:"Servis", text:"Küçük fincanda sıcak servis edin."}
+    ];
+  }
+  function stepsCafeAuLait(d){
+    return [
+      {role:"Hazırlık", text:d.dose+" kahveyi "+d.grind+" öğütün ("+d.doseHint+")."},
+      {role:"Demleme", text:"Filtre kahveyi standart oranda demleyin, "+d.time+" sürer."},
+      {role:"Süt", text:"Eşit miktarda sütü ısıtıp köpürtmeden sıcak hale getirin."},
+      {role:"Servis", text:"Filtre kahve ve sıcak sütü aynı anda, eşit miktarda geniş bir kâseye dökün."}
+    ];
+  }
+  function stepsBosnian(d){
+    return [
+      {role:"Hazırlık", text:d.dose+" kahveyi ("+d.doseHint+") džezveye koyun, "+layerMl(d,"water")+" ml soğuk su ekleyin."},
+      {role:"Pişirme", text:"Kısık ateşte, karıştırmadan ısıtın; su kaynamaya başlayınca köpüğü alıp fincanlara paylaştırın."},
+      {role:"Demleme", text:"Kalanı kısa süre daha ısıtıp fincanlara boşaltın, 2–3 dakika dibe çökmesini bekleyin."},
+      {role:"Servis", text:"Yanında bir küp şeker ve lokumla, şekeri kahveye katmadan servis edin."}
+    ];
+  }
+  function buildSteps(cat, d){
+    if(d.name === "Long Black") return stepsLongBlack(d);
+    if(cat.id === "geleneksel") return stepsTurkish(d);
+    if(cat.id === "dunya"){
+      if(d.name === "Vietnam Kahvesi") return stepsVietnam(d);
+      if(d.name === "Yunan Frappe") return stepsFrappe(d);
+      if(d.name === "Küba Kahvesi (Cortadito)") return stepsCortadito(d);
+      if(d.name === "Fransız Café au Lait") return stepsCafeAuLait(d);
+      if(d.name === "Bosna Kahvesi") return stepsBosnian(d);
+    }
+    if(cat.id === "filtre"){
+      if(d.vessel === "v60" || d.vessel === "chemex") return stepsPourover(d);
+      if(d.vessel === "frenchpress") return stepsImmersion(d);
+      if(d.vessel === "aeropress") return stepsAeropress(d);
+      if(d.vessel === "mokapot") return stepsMoka(d);
+      if(d.vessel === "drip") return stepsDrip(d);
+    }
+    if(d.name === "Cold Brew") return stepsColdBrew(d);
+    return stepsEspresso(d);
+  }
+
+  function buildLegendRow(){
+    var host = document.getElementById("legend");
+    var core = ["espresso","water","milk","foam","coffee"];
+    core.forEach(function(key){
+      var item = el("div","legend-item");
+      var dot = el("span","legend-dot"); dot.style.background = "var(--l-"+key+")";
+      item.appendChild(dot);
+      item.appendChild(document.createTextNode(LAYER_LABELS[key]));
+      host.appendChild(item);
+    });
+
+    var roastKey = el("div","roast-key");
+    var title = el("span","roast-key-title","Kavrulma Ölçeği — çekirdeğin ne kadar koyu kavrulduğu");
+    roastKey.appendChild(title);
+    var items = el("div","items");
+    for(var i=1;i<=5;i++){
+      items.appendChild(el("span","item",
+        '<span class="dot" style="background:'+ROAST_COLORS[i]+'"></span>'+
+        '<span class="name">'+ROAST_LABELS[i]+'</span>'+
+        '<span class="cue">'+ROAST_CUES[i]+'</span>'
+      ));
+    }
+    roastKey.appendChild(items);
+    host.appendChild(roastKey);
+
+    var note = el("div","legend-note","Her kart kendi türüne uygun bardak/ekipman çiziminde katman katman sunulur. Oranların ne anlama geldiği (ör. kahve:su ya da espresso:süt) her kartta ve detay sayfasında açıkça yazılıdır. Detaylı hazırlama adımları, çekirdek önerisi ve ipuçları için bir karta tıkla.");
+    host.appendChild(note);
+  }
+
+  function ingredientRows(d){
+    var rows = [];
+    rows.push(["Kahve", d.dose+(d.doseHint ? " · "+d.doseHint : "")]);
+    d.layers.forEach(function(l){
+      rows.push([
+        '<span class="dot" style="background:var(--l-'+l[0]+')"></span>'+LAYER_LABELS[l[0]],
+        l[1]+' ml'
+      ]);
+    });
+    if(d.layers.length > 1){
+      var total = d.layers.reduce(function(s,l){return s+l[1];},0);
+      rows.push(["Toplam", '<span class="accent">'+total+' ml</span>']);
+    }
+    if(d.ratio && d.ratio !== "—"){
+      rows.push(["Oran", '<span class="accent">'+d.ratio+'</span> <span class="faint">('+d.ratioLabel+')</span>']);
+    }
+    return rows;
+  }
+
+  function prepRows(d){
+    var cap = vesselCapacity(d.vessel);
+    var kapText = d.servingCup || (VESSEL_NAMES[d.vessel]+(cap ? " · ~"+cap+" ml" : ""));
+    return [
+      ["Pişirme Aracı", d.tool],
+      ["Kavrulma", roastDots(d.roast)+" "+ROAST_LABELS[d.roast]+' · <span class="faint">'+ROAST_CUES[d.roast]+"</span>"],
+      ["Öğütüm", d.grind],
+      ["Sıcaklık", d.temp],
+      ["Süre", d.time],
+      ["Kap", kapText]
+    ];
+  }
+
+  function ingredientsSpecsHTML(d){
+    var html = '<div class="specs specs-malz">';
+    html += '<div class="specs-label">Malzemeler</div>';
+    ingredientRows(d).forEach(function(r){
+      html += '<span class="k">'+r[0]+'</span><span class="v">'+r[1]+'</span>';
+    });
+    html += '</div>';
+    return html;
+  }
+
+  function prepSpecsHTML(d){
+    var html = '<div class="specs specs-prep">';
+    prepRows(d).forEach(function(r){
+      html += '<span class="k">'+r[0]+'</span><span class="v">'+r[1]+'</span>';
+    });
+    html += '</div>';
+    return html;
+  }
+
+  function infoGridHTML(d){
+    var html = '<div class="specs">';
+    html += '<div class="specs-label">Malzemeler</div>';
+    ingredientRows(d).forEach(function(r){
+      html += '<span class="k">'+r[0]+'</span><span class="v">'+r[1]+'</span>';
+    });
+    html += '<div class="specs-label">Detaylar</div>';
+    prepRows(d).forEach(function(r){
+      html += '<span class="k">'+r[0]+'</span><span class="v">'+r[1]+'</span>';
+    });
+    html += '</div>';
+    return html;
+  }
+
+  function printDetailHTML(cat, d){
+    var steps = buildSteps(cat, d);
+    var stepsHTML = steps.map(function(s){ return "<li><b>"+s.role+":</b> "+s.text+"</li>"; }).join("");
+    var tips = computeTips(cat, d);
+    var tipsHTML = tips.map(function(t){ return "<li>"+t+"</li>"; }).join("");
+    var origin = d.origin || cat.origin || "";
+    var html = '<div class="print-only">';
+    html += '<h5>Nasıl Yapılır</h5><ol>'+stepsHTML+'</ol>';
+    html += '<h5>İpuçları &amp; Gereklilikler</h5><ul>'+tipsHTML+'</ul>';
+    if(origin){ html += '<h5>Çekirdek Menşei Önerisi</h5><p>'+origin+'</p>'; }
+    html += '</div>';
+    return html;
+  }
+
+  function drinkCard(cat, d){
+    var card = el("article","card");
+    card.style.setProperty("--cat-accent","var("+cat.accent+")");
+    card.setAttribute("tabindex","0");
+    card.setAttribute("role","button");
+    card.setAttribute("aria-haspopup","dialog");
+    card.setAttribute("aria-label", d.name+" — detayları gör");
+
+    var top = el("div","card-top");
+    var nameWrap = el("div");
+    nameWrap.appendChild(el("span","card-name",d.name));
+    nameWrap.appendChild(el("span","card-note",d.note));
+    top.appendChild(nameWrap);
+    if(d.iced){
+      var badgeWrap = el("div");
+      badgeWrap.appendChild(el("span","badge iced","Buzlu"));
+      top.appendChild(badgeWrap);
+    }
+    card.appendChild(top);
+
+    var stage = el("div","vessel-stage", vesselSVG(d.vessel, d.layers));
+    card.appendChild(stage);
+
+    card.appendChild(el("div", null, ingredientsSpecsHTML(d)).firstElementChild);
+    card.appendChild(el("div","specs-label","Detaylar"));
+    card.appendChild(el("div", null, prepSpecsHTML(d)).firstElementChild);
+    card.appendChild(el("div","card-hint",'<span class="phase-preview">Hazırlık<span class="sep">›</span>Demleme<span class="sep">›</span>Sunum</span><span class="hint-text">Adımlar için tıkla ↗</span>'));
+    card.appendChild(el("div", null, printDetailHTML(cat, d)).firstElementChild);
+
+    function open(){ openModal(cat, d); }
+    card.addEventListener("click", open);
+    card.addEventListener("keydown", function(e){
+      if(e.key === "Enter" || e.key === " "){ e.preventDefault(); open(); }
+    });
+
+    return card;
+  }
+
+  /* ---------- detail modal ---------- */
+  var modal, modalBody, lastTrigger;
+
+  function renderModalContent(cat, d){
+    var badges = d.iced ? '<span class="badge iced">Buzlu</span>' : "";
+    var origin = d.origin || cat.origin || "";
+    var tips = computeTips(cat, d);
+    var tipsHTML = tips.map(function(t){ return "<li>"+t+"</li>"; }).join("");
+    var steps = buildSteps(cat, d);
+    var prepStep = steps[0];
+    var serveStep = steps[steps.length - 1];
+    var midSteps = steps.slice(1, -1);
+    var midHTML = midSteps.length > 1
+      ? "<ol>"+midSteps.map(function(s){ return "<li><b>"+s.role+"</b> — "+s.text+"</li>"; }).join("")+"</ol>"
+      : "<p><b>"+midSteps[0].role+"</b> — "+midSteps[0].text+"</p>";
+    var stepsHTML =
+      '<div class="step-phase"><span class="step-phase-name">Hazırlık</span><p>'+prepStep.text+'</p></div>'+
+      '<div class="step-phase"><span class="step-phase-name">Demleme</span>'+midHTML+'</div>'+
+      '<div class="step-phase"><span class="step-phase-name">Sunum</span><p>'+serveStep.text+'</p></div>';
+
+    var html = "";
+    html += '<div class="modal-visual">';
+    html += '<div class="vessel-stage">'+vesselSVG(d.vessel, d.layers)+'</div>';
+    html += '</div>';
+
+    html += '<div class="modal-info">';
+    html += '<p class="eyebrow" style="color:var(--cat-accent)">'+cat.title+'</p>';
+    html += '<h3 id="modal-name-heading" class="card-name">'+d.name+'</h3>';
+    html += '<p class="card-note">'+d.note+'</p>';
+    if(badges){ html += '<div class="modal-badges">'+badges+'</div>'; }
+    html += infoGridHTML(d);
+    html += '<div class="modal-section"><h4>Nasıl Yapılır</h4>'+stepsHTML+'</div>';
+    html += '<div class="modal-section"><h4>İpuçları &amp; Gereklilikler</h4><ul>'+tipsHTML+'</ul></div>';
+    if(origin){ html += '<div class="modal-section"><h4>Çekirdek Menşei Önerisi</h4><p>'+origin+'</p></div>'; }
+    html += '</div>';
+    return html;
+  }
+
+  function openModal(cat, d){
+    lastTrigger = document.activeElement;
+    modal.style.setProperty("--cat-accent","var("+cat.accent+")");
+    modalBody.innerHTML = renderModalContent(cat, d);
+    if(typeof modal.showModal === "function"){ modal.showModal(); }
+  }
+  function closeModal(){
+    modal.close();
+  }
+
+  function render(){
+    buildLegendRow();
+    var content = document.getElementById("content");
+    CATEGORIES.forEach(function(cat){
+      var section = el("section","category");
+      section.id = cat.id;
+      section.style.setProperty("--cat-accent","var("+cat.accent+")");
+
+      var head = el("div","cat-head");
+      head.appendChild(el("span","cat-num",cat.num));
+      head.appendChild(el("h2",null,cat.title));
+      section.appendChild(head);
+      section.appendChild(el("p","cat-sub",cat.sub));
+
+      var grid = el("div","grid");
+      cat.drinks.forEach(function(d){
+        grid.appendChild(drinkCard(cat, d));
+      });
+      section.appendChild(grid);
+      content.appendChild(section);
+    });
+
+    modal = document.getElementById("detail-modal");
+    modalBody = document.getElementById("modal-body");
+    modal.querySelector("[data-close]").addEventListener("click", closeModal);
+    modal.addEventListener("click", function(e){ if(e.target === modal){ closeModal(); } });
+    modal.addEventListener("close", function(){ if(lastTrigger && lastTrigger.focus){ lastTrigger.focus(); } });
+  }
+
+  render();
+})();
+</script>
