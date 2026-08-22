@@ -1,4 +1,4 @@
-<title>Kahve Atlası</title>
+<title>Coffee Atlas</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,340;0,9..144,480;0,9..144,600;1,9..144,480;1,9..144,600&family=Karla:ital,wght@0,400;0,500;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
 
@@ -137,7 +137,11 @@
   .cat-sub{font-size:1.02rem; color:var(--text-dim); margin-top:.3rem; max-width:62ch;}
 
   .grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:1rem;}
-  @media (max-width:380px){ .grid{grid-template-columns:1fr;} }
+  @media (max-width:640px){
+    .grid{grid-template-columns:1fr;}
+    .vessel-svg{max-width:280px;}
+    .card{padding:1.15rem 1.2rem 1rem;}
+  }
 
   /* ---------- card ---------- */
   .card{
@@ -225,7 +229,10 @@
   .modal-close:hover, .modal-close:focus-visible{background:var(--surface-2); color:var(--text); outline:none;}
   .modal-close:focus-visible{box-shadow:0 0 0 2px var(--accent);}
   .modal-body{display:grid; grid-template-columns:220px 1fr; gap:1.4rem; padding:1.7rem 1.7rem 1.6rem;}
-  @media (max-width:600px){ .modal-body{grid-template-columns:1fr;} }
+  @media (max-width:640px){
+    .modal-body{grid-template-columns:1fr; padding:1.3rem 1.15rem 1.2rem; gap:1rem;}
+    .modal-visual .vessel-svg{max-width:300px;}
+  }
   .modal-visual{display:flex; flex-direction:column; gap:.6rem; align-items:stretch;}
   .modal-visual .vessel-svg{max-width:230px;}
   .modal-info h3{font-size:2.05rem; margin-top:.15rem;}
@@ -286,17 +293,17 @@
 
 <div class="topnav">
   <div class="wrap">
-    <div class="brand"><span class="mark"></span><span data-i18n="title">Kahve Atlası</span></div>
+    <div class="brand"><span class="mark"></span><span data-i18n="title">Coffee Atlas</span></div>
     <nav class="navlinks" id="navlinks">
-      <a href="#espresso" data-i18n="navEspresso">Espresso Bazlı</a>
-      <a href="#soguk" data-i18n="navCold">Soğuk Kahveler</a>
-      <a href="#filtre" data-i18n="navFilter">Filtre &amp; Manuel</a>
-      <a href="#cezve" data-i18n="navCezve">Cezve Usulü</a>
-      <a href="#yoresel" data-i18n="navYoresel">Yöresel Kahve Kültürleri</a>
+      <a href="#espresso" data-i18n="navEspresso">Espresso-Based</a>
+      <a href="#soguk" data-i18n="navCold">Cold Coffees</a>
+      <a href="#filtre" data-i18n="navFilter">Filter &amp; Manual</a>
+      <a href="#cezve" data-i18n="navCezve">Cezve-Brewed</a>
+      <a href="#yoresel" data-i18n="navYoresel">Regional Coffee Cultures</a>
     </nav>
     <div class="lang-switch" role="group" aria-label="Dil / Language" id="lang-switch">
-      <button type="button" data-lang="tr">TR</button>
       <button type="button" data-lang="en">EN</button>
+      <button type="button" data-lang="tr">TR</button>
     </div>
   </div>
 </div>
@@ -305,9 +312,9 @@
   <div class="steam s1"></div>
   <div class="steam s2"></div>
   <div class="wrap">
-    <p class="eyebrow" data-i18n="eyebrow">Barista Referans Rehberi</p>
-    <h1 data-i18n="h1">Fincandaki her oranın haritası</h1>
-    <p class="lede" data-i18n="lede">Espresso'dan Türk kahvesine, kafelerde sipariş verdiğin her kahvenin doğru kahve–süt–su oranı, gramajı, ideal kavrulma derecesi ve kendi bardağıyla — tek bakışta. Detaylı hazırlama adımları için bir karta tıkla.</p>
+    <p class="eyebrow" data-i18n="eyebrow">Barista Reference Guide</p>
+    <h1 data-i18n="h1">A map of every ratio in the cup</h1>
+    <p class="lede" data-i18n="lede">From espresso to Turkish coffee — every drink you order at a café, with its exact coffee–milk–water ratio, dose, ideal roast, and proper cup, at a glance. Tap a card for the full step-by-step guide.</p>
     <div class="legend-row" id="legend"></div>
   </div>
 </header>
@@ -316,13 +323,13 @@
 
 <footer>
   <div class="wrap">
-    <p data-i18n="footerP">Oranlar ve kavrulma önerileri yaygın barista standartlarına dayanır; çekirdek ve damak zevkine göre ince ayar yapılabilir.</p>
-    <span class="mono" data-i18n="footerMono">g = kuru kahve · ml = sıvı hacim</span>
+    <p data-i18n="footerP">Ratios and roast recommendations follow common barista standards; fine-tune to your beans and taste.</p>
+    <span class="mono" data-i18n="footerMono">g = dry coffee · ml = liquid volume</span>
   </div>
 </footer>
 
 <dialog class="detail-modal" id="detail-modal" aria-labelledby="modal-name-heading">
-  <button class="modal-close" data-close id="modal-close-btn" aria-label="Kapat">×</button>
+  <button class="modal-close" data-close id="modal-close-btn" aria-label="Close">×</button>
   <div class="modal-body" id="modal-body"></div>
 </dialog>
 
@@ -330,7 +337,7 @@
 (function(){
   "use strict";
 
-  var LANG = "tr";
+  var LANG = "en";
   function t(v){
     if(v && typeof v === "object" && !Array.isArray(v)){
       if(v.tr !== undefined || v.en !== undefined) return v[LANG] || v.tr || v.en || "";
