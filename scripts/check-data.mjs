@@ -143,37 +143,43 @@ for (const lang of ["en", "tr"]) {
 sandbox.LANG = "en";
 
 /* ---------- I6 every drink routes to a step generator deliberately ---------- */
-/* buildSteps ends in an unguarded stepsEspresso fallback (gap G4b). Until that is made explicit,
-   pin the set of drinks allowed to reach it, so a future non-espresso drink cannot land there silently. */
-const ESPRESSO_FALLBACK_ALLOWED = new Set([
-  "ristretto", "espresso-solo", "doppio", "lungo", "americano", "cortado", "macchiato",
-  "piccolo-latte", "flat-white", "cappuccino", "latte", "mocha", "affogato",
-  "espresso-con-panna", "vienna", "iced-americano", "iced-latte",
-]);
-const EXPLICIT_IDS = new Set(["long-black", "turkish-coffee", "bosnian", "vietnamese", "greek-frappe", "cortadito", "cafe-au-lait", "cold-brew"]);
-const FILTER_VESSELS = new Set(["v60", "chemex", "frenchpress", "aeropress", "mokapot", "drip"]);
+/* buildSteps falls back to stepsEspresso for anything it does not route. That is correct only for
+   drinks that really are espresso builds. The routed set is read from the page's own STEP_ROUTES and
+   FILTER_STEPS tables rather than restated here, so this check cannot drift from the code it guards. */
+const ESPRESSO_CATEGORIES = new Set(["espresso", "cold"]);
+const routes = sandbox.STEP_ROUTES ?? {};
+const filterSteps = sandbox.FILTER_STEPS ?? {};
+if (Object.keys(routes).length === 0 || Object.keys(filterSteps).length === 0) {
+  fail("I6", "STEP_ROUTES or FILTER_STEPS is missing from the page — this check derives the routed set from them, so it cannot verify anything.");
+}
 for (const [cat, d] of pairs) {
-  const routed = EXPLICIT_IDS.has(d.id) || (cat.id === "filter" && FILTER_VESSELS.has(d.vessel));
-  if (!routed && !ESPRESSO_FALLBACK_ALLOWED.has(d.id)) {
-    fail("I6", `drink "${d.id}" reaches the stepsEspresso catch-all without being declared an espresso drink. Either give it its own generator or add it to ESPRESSO_FALLBACK_ALLOWED in this gate.`);
+  const routed = Object.prototype.hasOwnProperty.call(routes, d.id) ||
+    (cat.id === "filter" && Object.prototype.hasOwnProperty.call(filterSteps, d.vessel));
+  if (!routed && !ESPRESSO_CATEGORIES.has(cat.id)) {
+    fail("I6", `drink "${d.id}" sits in category "${cat.id}" and is not in STEP_ROUTES, so it silently falls back to espresso instructions. Give it a generator and route it.`);
   }
 }
 
-/* ---------- I7 ratio label matches its own numbers (filter methods) ---------- */
-/* Exempt, by name and with reason: the espresso family divides a gram dose by a millilitre yield,
-   so its `ratio` is not arithmetically checkable until gap G1 introduces a real gravimetric field. */
-const RATIO_EXEMPT = new Set([...ESPRESSO_FALLBACK_ALLOWED, "long-black", "cold-brew", "cortadito", "greek-frappe", "vietnamese", "cafe-au-lait"]);
+/* ---------- I7 ratio label matches its own numbers ---------- */
+/* The scope is derived from the data's own semantics rather than a name list: a ratio is only
+   arithmetically checkable when the record itself says the two sides are coffee and water. Espresso
+   builds (dose in grams against a yield in millilitres, gap G1) and milk or spirit builds declare a
+   different ratioLabel and are therefore out of scope by construction, not by exemption. */
+const COFFEE_WATER = "coffee : water";
 const doseGrams = (s) => { const m = /^([\d.]+)\s*g$/.exec(String(s).trim()); return m ? parseFloat(m[1]) : null; };
 const waterMl = (d) => (d.layers ?? []).filter((l) => l[0] === "water").reduce((a, l) => a + l[1], 0);
 
 let ratioChecked = 0;
 for (const d of drinks) {
-  if (RATIO_EXEMPT.has(d.id)) continue;
+  // "—" is the declared "this drink has no meaningful ratio" value, the same marker I2 honours and
+  // that ingredientRows() suppresses the row for. Nothing to check arithmetically.
+  if (d.ratio === "—") continue;
   if (!/^\d+(\.\d+)?(:\d+(\.\d+)?){1,2}$/.test(String(d.ratio))) {
     fail("I7", `drink "${d.id}" has a malformed ratio "${d.ratio}"`); continue;
   }
+  if (d.ratioLabel?.en !== COFFEE_WATER) continue;
   const parts = String(d.ratio).split(":");
-  if (parts.length !== 2) continue; // 1:1:1 style builds are not a dose:water ratio
+  if (parts.length !== 2) { fail("I7", `drink "${d.id}" labels its ratio "${COFFEE_WATER}" but states ${d.ratio}, which is not two-sided`); continue; }
   const g = doseGrams(d.dose), w = waterMl(d);
   if (g === null || w === 0) continue;
   ratioChecked++;
@@ -213,6 +219,17 @@ if (layerKeys.size === 0) {
 for (const key of layerKeys) {
   if (!cssVars.has(key)) fail("I9", `layer "${key}" has no --l-${key} colour, so its swatch renders black instead`);
   if (!sandbox.LAYER_LABELS?.[key]) fail("I9", `layer "${key}" has no entry in LAYER_LABELS, so its row renders unlabelled`);
+}
+
+/* ---------- I10 every vessel a drink uses is nameable and drawable ---------- */
+/* The detail panel prints t(VESSEL_NAMES[d.vessel]) (index.html:1299). A vessel with no entry there
+   leaves the "served in" row blank, and one with no geometry cannot be drawn at all. */
+const vesselNames = sandbox.VESSEL_NAMES ?? {};
+if (Object.keys(vesselNames).length === 0) {
+  fail("I10", "VESSEL_NAMES is missing from the page — this check derives from it, so it cannot verify anything.");
+}
+for (const vessel of new Set(drinks.map((d) => d.vessel))) {
+  if (!vesselNames[vessel]) fail("I10", `vessel "${vessel}" has no VESSEL_NAMES entry, so its "served in" row renders blank`);
 }
 
 /* ---------- report ---------- */
