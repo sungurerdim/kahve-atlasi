@@ -1,0 +1,31 @@
+name: quality
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: quality-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # python3 and node are both preinstalled on ubuntu-latest, and the gate needs nothing else.
+      # Versions are printed so a runner-image change that breaks the gate is visible in the log
+      # rather than showing up as an unexplained failure.
+      - name: Show interpreter versions
+        run: |
+          python3 --version
+          node --version
+
+      - name: Run the quality gate
+        run: bash scripts/quality.sh

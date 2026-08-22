@@ -1,0 +1,47 @@
+Coffee Atlas is released under two licences, because it is two things.
+
+SOFTWARE — MIT
+    Applies to: the quality gate in scripts/, the GitHub Actions workflow, and the
+    markup, styling and JavaScript of index.html (its structure, rendering logic,
+    step generators and vessel drawings).
+
+CONTENT — Creative Commons Attribution 4.0 International (CC BY 4.0)
+    Applies to: the coffee data and everything written for a reader — drink names,
+    notes, ratios, doses, roast and grind guidance, brewing procedures, tips, origin
+    notes, the English and Turkish copy, and the share card image (og-card.png).
+    Full text: https://creativecommons.org/licenses/by/4.0/legalcode
+    Summary:   https://creativecommons.org/licenses/by/4.0/
+    In short: reuse and adapt it freely, including commercially, as long as you give
+    appropriate credit and say whether you changed anything.
+
+---
+
+MIT License
+
+Copyright (c) 2026 Sungur Zahid Erdim
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+---
+
+A NOTE ON THE BREWING FIGURES
+
+The ratios and procedures are compiled from published standards and from the
+recognised traditional method for each drink; the per-drink sources are recorded
+in the project's audit trail. They are guidance, not a warranty of any result.
