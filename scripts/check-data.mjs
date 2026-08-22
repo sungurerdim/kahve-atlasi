@@ -202,6 +202,19 @@ for (const id of catIds) {
   if (!navHrefs.includes(id)) fail("I8", `category "${id}" renders a section but nothing in the nav links to it`);
 }
 
+/* ---------- I9 every layer key has a colour and a label ---------- */
+/* Layer swatches are built as var(--l-<key>) (index.html:613 and :1117). A key with no matching CSS
+   variable is not a fallback — the SVG fill resolves to black and the legend dot loses its colour. */
+const cssVars = new Set([...html.matchAll(/--l-([a-z]+)\s*:/g)].map((m) => m[1]));
+const layerKeys = new Set(drinks.flatMap((d) => (d.layers ?? []).map((l) => l[0])));
+if (layerKeys.size === 0) {
+  fail("I9", "found no layer keys to check — the selector is stale. Scanning nothing is a failure, not a pass.");
+}
+for (const key of layerKeys) {
+  if (!cssVars.has(key)) fail("I9", `layer "${key}" has no --l-${key} colour, so its swatch renders black instead`);
+  if (!sandbox.LAYER_LABELS?.[key]) fail("I9", `layer "${key}" has no entry in LAYER_LABELS, so its row renders unlabelled`);
+}
+
 /* ---------- report ---------- */
 console.log(`checked ${drinks.length} drinks across ${CATEGORIES.length} categories · steps rendered in 2 languages · ${ratioChecked} ratios verified arithmetically`);
 if (failures.length) {
