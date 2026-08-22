@@ -78,10 +78,18 @@
     background:rgba(255,250,240,.82);
     border-bottom:1px solid var(--line);
   }
-  .topnav .wrap{display:flex; align-items:center; justify-content:space-between; gap:1rem; padding-top:.7rem; padding-bottom:.7rem;}
-  .brand{display:flex; align-items:center; gap:.55rem; font-family:var(--font-display); font-weight:600; font-size:1.05rem; letter-spacing:.01em;}
+  .topnav .wrap{display:flex; align-items:center; justify-content:space-between; gap:1rem; padding-top:.7rem; padding-bottom:.7rem; flex-wrap:wrap; row-gap:.55rem;}
+  .brand{display:flex; align-items:center; gap:.55rem; font-family:var(--font-display); font-weight:600; font-size:1.05rem; letter-spacing:.01em; white-space:nowrap; flex:none;}
   .brand .mark{width:1.5em; height:1.5em; border-radius:50%; background:conic-gradient(from 210deg, var(--l-coldbrew), var(--accent) 40%, var(--l-milk) 70%, var(--l-coldbrew)); box-shadow:inset 0 0 0 1px var(--line-strong);}
   .navlinks{display:flex; gap:.35rem; flex-wrap:wrap;}
+  @media (max-width:640px){
+    .navlinks{
+      order:3; flex:1 1 100%; flex-wrap:nowrap; overflow-x:auto; -webkit-overflow-scrolling:touch;
+      scrollbar-width:none; -ms-overflow-style:none; margin:0 -1px; padding:0 1px .1rem;
+    }
+    .navlinks::-webkit-scrollbar{display:none;}
+    .navlinks a{flex:none;}
+  }
   .navlinks a{
     font-family:var(--font-mono); font-size:.78rem; letter-spacing:.06em; text-transform:uppercase;
     padding:.45rem .7rem; border-radius:999px; border:1px solid var(--line); color:var(--text-dim);
@@ -1200,6 +1208,7 @@
     html += '<div class="modal-visual">';
     html += '<div class="vessel-stage">'+vesselSVG(d.vessel, d.layers)+'</div>';
     html += ingredientsSpecsHTML(d);
+    html += detailSpecsHTML(d);
     html += '</div>';
 
     html += '<div class="modal-info">';
@@ -1207,7 +1216,6 @@
     html += '<h3 id="modal-name-heading" class="card-name">'+t(d.name)+'</h3>';
     html += '<p class="card-note">'+t(d.note)+'</p>';
     if(badges){ html += '<div class="modal-badges">'+badges+'</div>'; }
-    html += detailSpecsHTML(d);
     html += '<div class="modal-section"><h4>'+t(UI.nasilYapilir)+'</h4>'+stepsHTML+'</div>';
     html += '<div class="modal-section"><h4>'+t(UI.ipuclari)+'</h4><ul>'+tipsHTML+'</ul></div>';
     if(origin){ html += '<div class="modal-section"><h4>'+t(UI.mensei)+'</h4><p>'+origin+'</p></div>'; }
